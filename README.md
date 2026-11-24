@@ -12,7 +12,7 @@
 **Project:** Architectural Blueprint #2
 
 **Live design website:** <https://peterken-365.github.io/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture/>
-(auto-deploys from `main` via GitHub Actions — see [Deployment](#8-deployment-github-pages))
+(published via GitHub Pages from the `main` branch — see [Deployment](#8-deployment-github-pages))
 
 ---
 
@@ -126,18 +126,77 @@ Runbook with exact commands and expected outputs:
 ├── 04-automation-and-cloud-readiness/ # Automation brief, SDN/REST model, Azure VPN reservation,
 │                                      # backup/drift scripts, Ansible inventory, IKEv2 template
 ├── 05-verification-evidence/    # Verification runbook + screenshot checklist (T-01..T-07)
-├── index.html … verification.html  # The live GitHub Pages design website
-└── .github/workflows/deploy-pages.yml
+├── index.html … verification.html  # The live GitHub Pages design website (7 pages)
+└── styles.css · script.js · favicon.svg · 404.html   # Website assets
 ```
 
 ## 8. Deployment (GitHub Pages)
 
-The design website is deployed automatically by
-[`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml) on every push to
-`main` (or manual run from the **Actions** tab). The workflow uses
-`actions/configure-pages` with `enablement: true`, so Pages is switched on by the pipeline
-itself. If your repository settings ever show Pages disabled, set **Settings → Pages → Build and
-deployment → Source: GitHub Actions** and re-run the workflow.
+The website is fully static and lives at the repository root (`index.html`, with `.nojekyll`
+disabling Jekyll processing), so it can be published either way:
+
+### Option A — Branch deployment (recommended, ~30-second one-time setup)
+
+1. Open **Settings → Pages** in this repository.
+2. Under **Build and deployment**, set **Source** to **Deploy from a branch**.
+3. Choose **Branch: `main`** and **Folder: `/ (root)`**, then **Save**.
+4. The site goes live at:
+   <https://peterken-365.github.io/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture/>
+
+Every push to `main` redeploys automatically — no build step is required for this static site.
+
+### Option B — Actions deployment (optional)
+
+If you prefer CI-based deployment, create `.github/workflows/deploy-pages.yml` with the content
+below (GitHub web UI: **Add file → Create new file**, paste, commit), then set
+**Settings → Pages → Source: GitHub Actions**. The workflow enables Pages itself
+(`enablement: true`) and redeploys on every push to `main`.
+
+```yaml
+name: Deploy design website to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Pages (enables Pages on first run)
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Upload site artifact (repository root serves the website)
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+```
 
 ## 9. Reproduce This Build
 
