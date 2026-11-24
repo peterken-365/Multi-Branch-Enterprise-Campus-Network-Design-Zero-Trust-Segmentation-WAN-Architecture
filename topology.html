@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topology — Savannah Logistics Multi-Branch Campus Network</title>
+<meta name="description" content="Logical topology, device inventory and link plan for the Savannah Logistics multi-branch enterprise campus network (Nairobi HQ + Mombasa Branch).">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="index.html">
+      <span class="brand-mark" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M32 15 L15 40 M32 15 L49 40 M15 40 L49 40" stroke="#2bbd7f" stroke-width="4" stroke-linecap="round"/><circle cx="32" cy="15" r="7" fill="#3ddc97"/><circle cx="15" cy="40" r="7" fill="#f5b83d"/><circle cx="49" cy="40" r="7" fill="#f5b83d"/></svg>
+      </span>
+      <span class="brand-text">Savannah-Logistics<span class="brand-sub">Enterprise Network Blueprint</span></span>
+    </a>
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="primary-nav"><span></span><span></span><span></span></button>
+    <nav class="site-nav" id="primary-nav" aria-label="Primary navigation">
+      <a href="index.html">Overview</a>
+      <a href="topology.html">Topology</a>
+      <a href="ip-plan.html">IP Plan</a>
+      <a href="switching-routing.html">Design</a>
+      <a href="security.html">Security</a>
+      <a href="automation.html">Automation</a>
+      <a href="verification.html">Verification</a>
+      <a class="nav-gh" href="https://github.com/peterken-365/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture" target="_blank" rel="noopener">GitHub Repo</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+  <section class="page-hero">
+    <div class="container">
+      <p class="eyebrow">01 · Topology</p>
+      <h1>Logical &amp; Physical Topology</h1>
+      <p class="lead">One routed WAN, one OSPF domain, deterministic Layer 2. This diagram is the single source of truth for devices, links and security zones across both sites.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <figure class="figure">
+        <img src="assets/topology.svg" alt="Logical topology diagram of the Savannah Logistics network: ISP uplink to R1-HQ-EDGE, WAN Link A to R2-MOMBASA-EDGE, Link B to MLS-HQ-CORE, access switches SW1/SW2/SW3 with their VLAN zones, reserved Azure and VPN blocks, and VLAN 999 quarantine policy">
+        <figcaption>assets/topology.svg — also linked from the repository README for GitHub rendering</figcaption>
+      </figure>
+
+      <h2 style="font-size:1.35rem;letter-spacing:-.01em;margin-top:2rem">Device inventory</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Device</th><th>Platform</th><th>Role</th><th>Location</th><th>Management IP</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>R1-HQ-EDGE</strong></td><td>Cisco ISR <span class="mono">(PT 2911 · prod ISR 4331)</span></td><td>Perimeter router: NAT/PAT boundary, OSPF Area 0 edge, north-south EDGE-INBOUND ACL, default route to ISP</td><td>Nairobi HQ</td><td class="mono">10.20.255.1 (Lo0)</td></tr>
+            <tr><td><strong>R2-MOMBASA-EDGE</strong></td><td>Cisco ISR <span class="mono">(PT 2911)</span></td><td>Branch gateway: router-on-a-stick 802.1Q for VLAN 50/99, branch zero-trust ACL, DHCP relay</td><td>Mombasa Branch</td><td class="mono">10.20.255.2 (Lo0)</td></tr>
+            <tr><td><strong>MLS-HQ-CORE</strong></td><td>Catalyst 3650-24PS</td><td>Inter-VLAN routing via SVIs, Rapid PVST+ Root Bridge, OSPF Area 0, DHCP relay agent, gateway ACLs</td><td>Nairobi HQ (core)</td><td class="mono">10.20.99.1 (SVI 99)</td></tr>
+            <tr><td><strong>SW1-HQ-ACCESS-1</strong></td><td>Catalyst 2960-24TT</td><td>HQ user access: IT (10), Finance (20), Guest Wi-Fi (40); STP Root Secondary; security trio</td><td>Nairobi HQ</td><td class="mono">10.20.99.2 (SVI 99)</td></tr>
+            <tr><td><strong>SW2-HQ-ACCESS-2</strong></td><td>Catalyst 2960-24TT</td><td>HQ server-farm access: Servers/DMZ (30) with static DAI source bindings</td><td>Nairobi HQ</td><td class="mono">10.20.99.3 (SVI 99)</td></tr>
+            <tr><td><strong>SW3-MOMBASA-ACCESS</strong></td><td>Catalyst 2960-24TT</td><td>Branch user access: Operations (50); security trio</td><td>Mombasa Branch</td><td class="mono">10.20.99.18 (SVI 99)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 style="font-size:1.35rem;letter-spacing:-.01em;margin-top:2rem">Link inventory</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Link</th><th>Endpoint A</th><th>Endpoint B</th><th>Type</th><th>Subnet / VLANs</th><th>Notes</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Public uplink</td><td class="mono">R1 Gi0/0</td><td class="mono">ISP</td><td>Routed L3</td><td class="mono">203.0.113.0/30</td><td>NAT outside + EDGE-INBOUND inbound. RFC 5737 documentation range — swap for the real ISP assignment in production</td></tr>
+            <tr><td><strong>Link A</strong></td><td class="mono">R1 Gi0/2</td><td class="mono">R2 Gi0/0</td><td>Routed L3 p2p</td><td class="mono">10.20.254.0/30</td><td>OSPF transit; <span class="mono">ip nat inside</span> on the R1 side</td></tr>
+            <tr><td><strong>Link B</strong></td><td class="mono">R1 Gi0/1</td><td class="mono">MLS Gi1/1/1</td><td>Routed L3 p2p</td><td class="mono">10.20.254.4/30</td><td>OSPF transit; routed port on the MLS (<span class="mono">no switchport</span>)</td></tr>
+            <tr><td>R2 — SW3</td><td class="mono">R2 Gi0/1</td><td class="mono">SW3 Gi0/1</td><td>802.1Q trunk</td><td class="mono">VLANs 50, 99 · native 999</td><td>Router-on-a-stick sub-interfaces Gi0/1.50 and Gi0/1.99</td></tr>
+            <tr><td>MLS — SW1</td><td class="mono">MLS Gi1/0/1</td><td class="mono">SW1 Gi0/1</td><td>802.1Q trunk</td><td class="mono">VLANs 10, 20, 40, 99 · native 999</td><td><span class="mono">nonegotiate</span>; snooping/DAI trusted on the SW1 side</td></tr>
+            <tr><td>MLS — SW2</td><td class="mono">MLS Gi1/0/2</td><td class="mono">SW2 Gi0/1</td><td>802.1Q trunk</td><td class="mono">VLANs 30, 99 · native 999</td><td><span class="mono">nonegotiate</span>; snooping/DAI trusted on the SW2 side</td></tr>
+            <tr><td>Access ports</td><td class="mono">SW1/SW2/SW3</td><td>End hosts &amp; AP</td><td>Access</td><td class="mono">VLAN 10/20/30/40/50</td><td>PortFast + BPDU Guard + Port Security; unused ports quarantined in VLAN 999 and shutdown</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 style="font-size:1.35rem;letter-spacing:-.01em;margin-top:2rem">Architectural design decisions</h2>
+      <ol class="note-list">
+        <li><strong>Routed point-to-point WAN/transit links (not trunks).</strong> Link A and Link B are clean /30s in OSPF Area 0 — no user traffic ever rides a transit subnet, and no trunks cross the WAN. VLANs are strictly site-local, the only real-world-correct model.</li>
+        <li><strong>Layer-3 boundary at the core.</strong> HQ user VLAN gateways terminate as SVIs on MLS-HQ-CORE (wire-speed inter-VLAN routing). R1 exists for NAT/PAT, the perimeter ACL and the WAN — the classic collapsed-core pattern.</li>
+        <li><strong>Explicit STP Root.</strong> MLS-HQ-CORE is <span class="mono">spanning-tree vlan 10,20,30,40,99,999 root primary</span> — root election is never left to chance. SW1 is Root Secondary for the HQ user VLANs.</li>
+        <li><strong>Hardened native VLAN.</strong> Every trunk uses native VLAN 999 (the unrouted quarantine VLAN) with DTP disabled (<span class="mono">switchport nonegotiate</span>). A double-tagging VLAN-hop attempt lands in a VLAN with no hosts and no gateway.</li>
+        <li><strong>Management block site-split.</strong> A Layer-2 VLAN cannot span the routed WAN, so the documented 10.20.99.0/27 block is sub-allocated per site: 10.20.99.0/28 serves the HQ switch SVIs (MLS .1, SW1 .2, SW2 .3) and 10.20.99.16/28 serves the branch (R2 sub-interface .17, SW3 .18).</li>
+        <li><strong>Router loopbacks /32</strong> (10.20.255.1/2) serve as stable SSH endpoints, NTP sources and OSPF router-ID anchors — outside the user/mgmt subnets so longest-match routing stays unambiguous.</li>
+        <li><strong>Passive OSPF everywhere by default.</strong> <span class="mono">passive-interface default</span> on every router and the MLS, with only the three transit interfaces non-passive. Routing updates are never leaked onto user or guest LANs.</li>
+        <li><strong>Quarantine discipline.</strong> No port remains in VLAN 1 anywhere. Unused ports are <span class="mono">access vlan 999</span> + <span class="mono">shutdown</span>; VLAN 1 carries zero user, server or management traffic.</li>
+      </ol>
+
+      <p style="margin-top:1.6rem"><a class="card-link" href="https://github.com/peterken-365/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture/blob/main/01-topology-and-ip-plan/topology.md" target="_blank" rel="noopener">Read the full topology document on GitHub →</a></p>
+    </div>
+  </section>
+</main>
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <p class="f-title">Savannah Logistics Ltd. — Multi-Branch Enterprise Campus Network</p>
+      <p class="f-sub">Zero-Trust Segmentation &amp; WAN Architecture · CCNA 200-301 aligned · Nairobi HQ + Mombasa Branch · Designed and documented by peterken-365</p>
+    </div>
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <a href="index.html">Overview</a>
+      <a href="topology.html">Topology</a>
+      <a href="ip-plan.html">IP Plan</a>
+      <a href="switching-routing.html">Design</a>
+      <a href="security.html">Security</a>
+      <a href="automation.html">Automation</a>
+      <a href="verification.html">Verification</a>
+      <a href="https://github.com/peterken-365/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture" target="_blank" rel="noopener">Repository</a>
+    </nav>
+  </div>
+  <div class="container footer-base">
+    <p>© <span id="year">2026</span> peterken-365 — Junior Network &amp; Security Architect portfolio project.</p>
+    <p>Configs are lab/design values — rotate credentials before production deployment.</p>
+  </div>
+</footer>
+<script src="script.js"></script>
+</body>
+</html>
