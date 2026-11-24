@@ -1,0 +1,42 @@
+---
+# Savannah Logistics - nightly config backup + drift report (Pillar 4)
+# Run:  ansible-playbook -i inventory.ini playbook.yml
+# Production upgrade of scripts/backup-and-drift-check.sh using cisco.ios.
+
+- name: Backup running-configs and flag drift vs golden source-of-truth
+  hosts: savannah_network
+  gather_facts: false
+
+  vars:
+    backup_root: "backups"
+    golden_dir: "../../02-switching-and-routing-design/configs"
+
+  tasks:
+    - name: Retrieve running configuration
+      cisco.ios.ios_command:
+        commands:
+          - show running-config
+      register: run_cfg
+
+    - name: Store timestamped backup per device
+      ansible.builtin.copy:
+        content: "{{ run_cfg.stdout[0] }}\n"
+        dest: "{{ backup_root }}/{{ inventory_hostname }}-{{ lookup('pipe', 'date +%F-%H%M') }}.cfg"
+        mode: "0600"
+
+    - name: Compare against golden config (report only)
+      ansible.builtin.shell: |
+        set -o pipefail
+        diff "{{ golden_dir }}/{{ inventory_hostname }}.cfg" \
+             "{{ backup_root }}/{{ inventory_hostname }}-"*".cfg" | head -40
+      args:
+        executable: /bin/bash
+      register: drift
+      changed_when: false
+      failed_when: false
+
+    - name: Report drift status
+      ansible.builtin.debug:
+        msg: >-
+          {{ inventory_hostname }}:
+          {{ 'NO DRIFT' if (drift.stdout | length == 0) else 'DRIFT DETECTED - review before change window' }}
