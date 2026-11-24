@@ -1,0 +1,127 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 920" font-family="'Segoe UI',Arial,sans-serif">
+  <rect x="0" y="0" width="1240" height="920" fill="#f8fafc"/>
+  <text x="24" y="34" font-size="19" font-weight="700" fill="#0f172a">SAVANNAH LOGISTICS LTD - MULTI-BRANCH ENTERPRISE CAMPUS NETWORK (LOGICAL)</text>
+  <text x="24" y="56" font-size="12" fill="#475569">OSPFv2 Area 0 - VLSM from 10.20.0.0/16 - Zero-Trust Segmentation - Rapid PVST+ - NAT/PAT at Edge - SSHv2 Management Plane</text>
+
+  <rect x="950" y="24" width="272" height="106" rx="10" fill="#fffbeb" stroke="#b45309" stroke-width="1.5"/>
+  <text x="964" y="46" font-size="12" font-weight="700" fill="#92400e">RESERVED / CLOUD-READY (PILLAR 4)</text>
+  <text x="964" y="66" font-size="11" font-family="Consolas,monospace" fill="#78350f">Azure S2S VPN: 10.20.200.0/24</text>
+  <text x="964" y="84" font-size="11" font-family="Consolas,monospace" fill="#78350f">IPsec tunnel transit: 10.20.254.8/30</text>
+  <text x="964" y="102" font-size="11" font-family="Consolas,monospace" fill="#78350f">Router loopbacks: 10.20.255.0/24</text>
+  <text x="964" y="120" font-size="11" font-family="Consolas,monospace" fill="#78350f">(R1 = 10.20.255.1, R2 = 10.20.255.2)</text>
+
+  <rect x="500" y="90" width="240" height="60" rx="10" fill="#1e293b"/>
+  <text x="620" y="115" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">INTERNET / ISP</text>
+  <text x="620" y="134" text-anchor="middle" font-size="11" font-family="Consolas,monospace" fill="#cbd5e1">203.0.113.0/30 - Web srv 198.51.100.10</text>
+
+  <line x1="620" y1="150" x2="620" y2="205" stroke="#334155" stroke-width="2.5"/>
+  <text x="630" y="182" font-size="11" font-family="Consolas,monospace" fill="#475569">PUBLIC UPLINK</text>
+
+  <rect x="500" y="205" width="240" height="100" rx="10" fill="#1f2937"/>
+  <text x="620" y="228" text-anchor="middle" font-size="15" font-weight="700" fill="#ffffff">R1-HQ-EDGE</text>
+  <text x="620" y="246" text-anchor="middle" font-size="11" font-family="Consolas,monospace" fill="#a7f3d0">ISR - OSPF RID 1.1.1.1 - AREA 0</text>
+  <text x="620" y="263" text-anchor="middle" font-size="11" font-family="Consolas,monospace" fill="#e2e8f0">NAT/PAT OVERLOAD + EDGE ACL</text>
+  <text x="620" y="280" text-anchor="middle" font-size="11" font-family="Consolas,monospace" fill="#e2e8f0">Loopback 10.20.255.1 (SSH/NTP src)</text>
+
+  <line x1="510" y1="295" x2="345" y2="392" stroke="#334155" stroke-width="2.5"/>
+  <text x="410" y="336" text-anchor="middle" font-size="11" font-family="Consolas,monospace" fill="#334155" font-weight="700">LINK-A 10.20.254.0/30</text>
+  <text x="410" y="352" text-anchor="middle" font-size="10" fill="#64748b">P2P WAN (OSPF)</text>
+
+  <rect x="110" y="392" width="240" height="100" rx="10" fill="#1f2937"/>
+  <text x="230" y="415" text-anchor="middle" font-size="15" font-weight="700" fill="#ffffff">R2-MOMBASA-EDGE</text>
+  <text x="230" y="433" text-anchor="middle" font-size="11" font-family="Consolas,monospace" fill="#a7f3d0">ISR - OSPF RID 2.2.2.2 - AREA 0</text>
+  <text x="230" y="450" text-anchor="middle" font-size="11" font-family="Consolas,monospace" fill="#e2e8f0">Router-on-a-Stick 802.1Q (50/99)</text>
+  <text x="230" y="467" text-anchor="middle" font-size="11" font-family="Consolas,monospace" fill="#e2e8f0">BRANCH-IN ACL + DHCP relay</text>
+  <text x="230" y="484" text-anchor="middle" font-size="11" font-family="Consolas,monospace" fill="#e2e8f0">Loopback 10.20.255.2</text>
+
+  <line x1="740" y1="290" x2="905" y2="392" stroke="#334155" stroke-width="2.5"/>
+  <text x="842" y="336" text-anchor="middle" font-size="11" font-family="Consolas,monospace" fill="#334155" font-weight="700">LINK-B 10.20.254.4/30</text>
+  <text x="842" y="352" text-anchor="middle" font-size="10" fill="#64748b">P2P transit (OSPF)</text>
+
+  <rect x="880" y="392" width="270" height="112" rx="10" fill="#0e7c5a"/>
+  <text x="1015" y="415" text-anchor="middle" font-size="15" font-weight="700" fill="#ffffff">MLS-HQ-CORE</text>
+  <text x="1015" y="433" text-anchor="middle" font-size="11" font-family="Consolas,monospace" fill="#d1fae5">Catalyst 3650 - OSPF RID 3.3.3.3</text>
+  <text x="1015" y="450" text-anchor="middle" font-size="11" font-family="Consolas,monospace" fill="#d1fae5">Inter-VLAN SVIs + DHCP RELAY</text>
+  <text x="1015" y="467" text-anchor="middle" font-size="11" font-family="Consolas,monospace" fill="#fef08a">Rapid PVST+ ROOT BRIDGE (explicit)</text>
+  <text x="1015" y="484" text-anchor="middle" font-size="11" font-family="Consolas,monospace" fill="#d1fae5">GUEST-IN / FINANCE-IN / MGMT-PLANE</text>
+
+  <line x1="230" y1="492" x2="230" y2="575" stroke="#0f766e" stroke-width="3"/>
+  <text x="240" y="540" font-size="11" font-family="Consolas,monospace" fill="#0f766e">802.1Q TRUNK 50,99 (native 999)</text>
+
+  <rect x="110" y="575" width="240" height="88" rx="10" fill="#0f766e"/>
+  <text x="230" y="598" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">SW3-MOMBASA-ACCESS</text>
+  <text x="230" y="616" text-anchor="middle" font-size="11" font-family="Consolas,monospace" fill="#ccfbf1">2960 - VLAN 50 + 99 + 999</text>
+  <text x="230" y="633" text-anchor="middle" font-size="11" font-family="Consolas,monospace" fill="#ccfbf1">PORT-SEC - DHCP SNOOPING - DAI</text>
+  <text x="230" y="650" text-anchor="middle" font-size="11" font-family="Consolas,monospace" fill="#ccfbf1">PORTFAST + BPDU GUARD</text>
+
+  <line x1="910" y1="504" x2="880" y2="575" stroke="#0f766e" stroke-width="3"/>
+  <text x="868" y="536" text-anchor="end" font-size="11" font-family="Consolas,monospace" fill="#0f766e">802.1Q TRUNK 10,20,40,99</text>
+  <text x="868" y="552" text-anchor="end" font-size="10" font-family="Consolas,monospace" fill="#0f766e">native 999 - nonegotiate</text>
+
+  <rect x="760" y="575" width="230" height="88" rx="10" fill="#0f766e"/>
+  <text x="875" y="598" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">SW1-HQ-ACCESS-1</text>
+  <text x="875" y="616" text-anchor="middle" font-size="11" font-family="Consolas,monospace" fill="#ccfbf1">2960 - VLAN 10/20/40/99</text>
+  <text x="875" y="633" text-anchor="middle" font-size="11" font-family="Consolas,monospace" fill="#ccfbf1">STP ROOT SECONDARY (HQ VLANS)</text>
+  <text x="875" y="650" text-anchor="middle" font-size="11" font-family="Consolas,monospace" fill="#ccfbf1">SECURITY TRIO ON ACCESS PORTS</text>
+
+  <line x1="1110" y1="504" x2="1140" y2="575" stroke="#0f766e" stroke-width="3"/>
+  <text x="1152" y="536" font-size="11" font-family="Consolas,monospace" fill="#0f766e">802.1Q TRUNK 30,99</text>
+  <text x="1152" y="552" font-size="10" font-family="Consolas,monospace" fill="#0f766e">native 999 - nonegotiate</text>
+
+  <rect x="1030" y="575" width="230" height="88" rx="10" fill="#0f766e"/>
+  <text x="1145" y="598" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">SW2-HQ-ACCESS-2</text>
+  <text x="1145" y="616" text-anchor="middle" font-size="11" font-family="Consolas,monospace" fill="#ccfbf1">2960 - VLAN 30 + 99 + 999</text>
+  <text x="1145" y="633" text-anchor="middle" font-size="11" font-family="Consolas,monospace" fill="#ccfbf1">SERVER FARM + DAI STATIC BINDS</text>
+  <text x="1145" y="650" text-anchor="middle" font-size="11" font-family="Consolas,monospace" fill="#ccfbf1">DHCP SRV PORT = SNOOP TRUSTED</text>
+
+  <line x1="810" y1="663" x2="800" y2="695" stroke="#94a3b8" stroke-width="2"/>
+  <line x1="800" y1="747" x2="800" y2="755" stroke="#94a3b8" stroke-width="2"/>
+  <line x1="800" y1="807" x2="800" y2="815" stroke="#94a3b8" stroke-width="2"/>
+
+  <rect x="700" y="695" width="200" height="52" rx="8" fill="#ffffff" stroke="#b45309" stroke-width="1.5"/>
+  <text x="800" y="715" text-anchor="middle" font-size="12" font-weight="700" fill="#92400e">VLAN 10 - IT ADMIN</text>
+  <text x="800" y="733" text-anchor="middle" font-size="10" font-family="Consolas,monospace" fill="#475569">10.20.10.0/26 - 62 hosts</text>
+
+  <rect x="700" y="755" width="200" height="52" rx="8" fill="#ffffff" stroke="#b91c1c" stroke-width="1.5"/>
+  <text x="800" y="775" text-anchor="middle" font-size="12" font-weight="700" fill="#991b1b">VLAN 20 - FINANCE + HR</text>
+  <text x="800" y="793" text-anchor="middle" font-size="10" font-family="Consolas,monospace" fill="#475569">10.20.20.0/25 - 126 hosts</text>
+
+  <rect x="700" y="815" width="200" height="52" rx="8" fill="#fff7ed" stroke="#d97706" stroke-width="1.5"/>
+  <text x="800" y="835" text-anchor="middle" font-size="12" font-weight="700" fill="#9a3412">VLAN 40 - GUEST Wi-Fi (AP)</text>
+  <text x="800" y="853" text-anchor="middle" font-size="10" font-family="Consolas,monospace" fill="#475569">10.20.40.0/24 - ISOLATED ZONE</text>
+
+  <line x1="1145" y1="663" x2="1145" y2="695" stroke="#94a3b8" stroke-width="2"/>
+  <rect x="1030" y="695" width="230" height="112" rx="8" fill="#ecfdf5" stroke="#0e7c5a" stroke-width="1.5"/>
+  <text x="1145" y="715" text-anchor="middle" font-size="12" font-weight="700" fill="#065f46">VLAN 30 - SERVERS / DMZ</text>
+  <text x="1145" y="735" text-anchor="middle" font-size="10" font-family="Consolas,monospace" fill="#334155">10.20.30.0/27 - GW 10.20.30.1</text>
+  <text x="1145" y="753" text-anchor="middle" font-size="10" font-family="Consolas,monospace" fill="#334155">DHCP .10 - NTP/LOG .11</text>
+  <text x="1145" y="771" text-anchor="middle" font-size="10" font-family="Consolas,monospace" fill="#334155">DNS .12 - APP .20 (HTTP)</text>
+  <text x="1145" y="791" text-anchor="middle" font-size="10" fill="#475569">Central services for all VLANs</text>
+
+  <line x1="180" y1="663" x2="180" y2="695" stroke="#94a3b8" stroke-width="2"/>
+  <rect x="110" y="695" width="230" height="52" rx="8" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.5"/>
+  <text x="225" y="715" text-anchor="middle" font-size="12" font-weight="700" fill="#115e59">VLAN 50 - BRANCH USERS</text>
+  <text x="225" y="733" text-anchor="middle" font-size="10" font-family="Consolas,monospace" fill="#334155">10.20.50.0/25 - 126 hosts</text>
+
+  <rect x="110" y="775" width="230" height="66" rx="8" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <text x="225" y="796" text-anchor="middle" font-size="11" font-weight="700" fill="#64748b">VLAN 999 - QUARANTINE</text>
+  <text x="225" y="813" text-anchor="middle" font-size="10" font-family="Consolas,monospace" fill="#64748b">Unused ports: access vlan 999</text>
+  <text x="225" y="829" text-anchor="middle" font-size="10" font-family="Consolas,monospace" fill="#64748b">shutdown + native VLAN on trunks</text>
+
+  <rect x="20" y="884" width="26" height="10" fill="#334155"/>
+  <text x="52" y="893" font-size="11" fill="#334155">P2P routed transit (OSPF)</text>
+  <rect x="240" y="884" width="26" height="10" fill="#0f766e"/>
+  <text x="272" y="893" font-size="11" fill="#334155">802.1Q trunk (native VLAN 999)</text>
+  <rect x="500" y="884" width="12" height="12" fill="#b45309"/>
+  <text x="518" y="893" font-size="11" fill="#334155">IT</text>
+  <rect x="548" y="884" width="12" height="12" fill="#b91c1c"/>
+  <text x="566" y="893" font-size="11" fill="#334155">Finance</text>
+  <rect x="636" y="884" width="12" height="12" fill="#d97706"/>
+  <text x="654" y="893" font-size="11" fill="#334155">Guest (isolated)</text>
+  <rect x="772" y="884" width="12" height="12" fill="#0e7c5a"/>
+  <text x="790" y="893" font-size="11" fill="#334155">Servers</text>
+  <rect x="862" y="884" width="12" height="12" fill="#94a3b8"/>
+  <text x="880" y="893" font-size="11" fill="#334155">Quarantine</text>
+
+  <text x="24" y="914" font-size="10" fill="#64748b">All user gateways enforce extended ACLs - OSPF passive-interface on user-facing links - VTY SSH-only from 10.20.10.0/26 - NTP + Syslog centralized at 10.20.30.11</text>
+</svg>

@@ -1,0 +1,10 @@
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Local artifacts (never commit)
+*.log
+*.tmp
+backups/
+
+# NOTE: .pkt Packet Tracer files SHOULD be committed when produced.
