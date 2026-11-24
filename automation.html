@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Automation &amp; Cloud Readiness — Savannah Logistics Campus Network</title>
+<meta name="description" content="Configuration-as-code, backup and drift detection, SDN plane model with RESTCONF examples, and the ring-fenced Azure S2S VPN reservation for the Savannah Logistics enterprise campus network.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="index.html">
+      <span class="brand-mark" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M32 15 L15 40 M32 15 L49 40 M15 40 L49 40" stroke="#2bbd7f" stroke-width="4" stroke-linecap="round"/><circle cx="32" cy="15" r="7" fill="#3ddc97"/><circle cx="15" cy="40" r="7" fill="#f5b83d"/><circle cx="49" cy="40" r="7" fill="#f5b83d"/></svg>
+      </span>
+      <span class="brand-text">Savannah-Logistics<span class="brand-sub">Enterprise Network Blueprint</span></span>
+    </a>
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="primary-nav"><span></span><span></span><span></span></button>
+    <nav class="site-nav" id="primary-nav" aria-label="Primary navigation">
+      <a href="index.html">Overview</a>
+      <a href="topology.html">Topology</a>
+      <a href="ip-plan.html">IP Plan</a>
+      <a href="switching-routing.html">Design</a>
+      <a href="security.html">Security</a>
+      <a href="automation.html">Automation</a>
+      <a href="verification.html">Verification</a>
+      <a class="nav-gh" href="https://github.com/peterken-365/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture" target="_blank" rel="noopener">GitHub Repo</a>
+    </nav>
+  </div>
+</header>
+<main id="main">
+  <section class="page-hero">
+    <div class="container">
+      <p class="eyebrow">05 · Automation &amp; cloud</p>
+      <h1>Automation &amp; Cloud Readiness</h1>
+      <p class="lead">Configuration as code, drift detection, an API-ready management plane, and ring-fenced address space for the Azure hybrid extension — the operational layer that keeps this design maintainable after day one.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Pillar 4 · Part 1</p>
+        <h2>Configuration as source-of-truth</h2>
+        <p>Manual CLI typing does not scale and does not detect unauthorized change. The six golden <span class="mono">.cfg</span> files in <span class="mono">02-switching-and-routing-design/configs/</span> are the authoritative definition of the network — version-controlled in Git, where every change is a reviewed commit.</p>
+      </div>
+      <div class="filetree" aria-label="Automation assets">
+<b>04-automation-and-cloud-readiness/</b>
+├── <a href="04-automation-and-cloud-readiness/automation-brief.md" target="_blank" rel="noopener">automation-brief.md</a>                golden-config standard · naming · backup workflow
+├── <a href="04-automation-and-cloud-readiness/sdn-rest-api-model.md" target="_blank" rel="noopener">sdn-rest-api-model.md</a>              plane separation · CLI vs RESTCONF · telemetry path
+├── <a href="04-automation-and-cloud-readiness/azure-vpn-reservation.md" target="_blank" rel="noopener">azure-vpn-reservation.md</a>           ring-fenced blocks · S2S design · BGP boundary
+├── <a href="04-automation-and-cloud-readiness/azure-vpn-tunnel-template.cfg" target="_blank" rel="noopener">azure-vpn-tunnel-template.cfg</a>      IKEv2 + Tunnel0 template (NOT applied)
+├── <a href="04-automation-and-cloud-readiness/scripts/backup-and-drift-check.sh" target="_blank" rel="noopener">scripts/backup-and-drift-check.sh</a>  dependency-free SSH backup + diff
+└── <a href="04-automation-and-cloud-readiness/ansible/inventory.ini" target="_blank" rel="noopener">ansible/</a>                           inventory.ini + playbook.yml (cisco.ios collection)</div>
+
+      <h3 style="font-size:1.15rem;margin-top:1.8rem">Device naming standard</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Pattern</th><th>Example</th><th>Meaning</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="mono">R&lt;SITE&gt;-&lt;ROLE&gt;</td><td class="mono">R1-HQ-EDGE</td><td>Site edge router</td></tr>
+            <tr><td class="mono">MLS-&lt;SITE&gt;-CORE</td><td class="mono">MLS-HQ-CORE</td><td>Multilayer core switch</td></tr>
+            <tr><td class="mono">SW&lt;NUM&gt;-&lt;SITE&gt;-ACCESS[&lt;n&gt;]</td><td class="mono">SW1-HQ-ACCESS-1</td><td>Access switch</td></tr>
+            <tr><td>Interface descriptions</td><td class="mono">LINK-A: P2P WAN TO R2...</td><td>Every link self-documents its peer and subnet</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 style="font-size:1.15rem;margin-top:1.8rem">Nightly backup &amp; drift workflow</h3>
+      <ol class="steps">
+        <li><strong>Pull running-config over SSH</strong> — <span class="mono">scripts/backup-and-drift-check.sh</span> (cron <span class="mono">30 23 * * *</span>) or the Ansible playbook.</li>
+        <li><strong>Store timestamped copy</strong> — <span class="mono">backups/&lt;device&gt;-&lt;date&gt;.cfg</span> on the backup host (server farm in production).</li>
+        <li><strong>Diff vs golden config</strong> — the script exits non-zero on drift and prints the differences.</li>
+        <li><strong>Review &amp; reconcile</strong> — drift is an unauthorized change until proven otherwise; update the golden file via a Git PR.</li>
+      </ol>
+      <div class="terminal">
+        <div class="terminal-bar"><i></i><i></i><i></i><span>drift detection logic</span></div>
+        <pre>golden config (Git)                        &lt;----  expected state
+        | diff
+running-config (device, via SSH/Ansible)   &lt;----  actual state
+        |
+        +--&gt; [OK]    no drift        --&gt; retain backup, no action
+        +--&gt; [DRIFT] differences    --&gt; page netops; unauthorized-change process</pre>
+      </div>
+      <div class="callout callout-amber">
+        <strong>Zero dependencies by design:</strong> the shipped bash script uses plain <span class="mono">ssh</span> + <span class="mono">diff</span> with SSH key auth to each device's management IP as <span class="mono">netadmin</span>. The Ansible playbook is the production upgrade path (<span class="mono">cisco.ios</span> collection, <span class="mono">network_cli</span> connection).
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Pillar 4 · Part 2</p>
+        <h2>An API-ready management plane</h2>
+        <p>How this CLI-managed topology maps onto Software-Defined Networking — and how the same facts become consumable via REST APIs (JSON) instead of screen-scraping CLI output.</p>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Plane</th><th>Traditional (this design)</th><th>SDN end-state</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Data plane</strong></td><td>ASIC forwarding: MAC tables on the access switches; CEF/TCAM inter-VLAN entries on the MLS</td><td>Same ASICs, flow rules pushed by a controller (e.g., OpenFlow)</td></tr>
+            <tr><td><strong>Control plane</strong></td><td>OSPF LSDB on R1/R2/MLS; Rapid PVST+ BPDUs; ARP</td><td>Centralized controller computes topology and paths</td></tr>
+            <tr><td><strong>Management plane</strong></td><td>SSH CLI · Syslog · NTP · SNMP</td><td>RESTCONF/NETCONF/gNMI northbound API + telemetry streams</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Task</th><th>CLI era (fragile)</th><th>API era (structured)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Read interface state</td><td><span class="mono">show ip interface brief</span> + regex parse</td><td><span class="mono">GET /restconf/data/ietf-interfaces:interfaces</span> → JSON</td></tr>
+            <tr><td>Read OSPF neighbors</td><td><span class="mono">show ip ospf neighbor</span> text</td><td><span class="mono">GET /restconf/data/Cisco-IOS-XE-ospf-oper:ospf-oper-data</span> → JSON</td></tr>
+            <tr><td>Push a VLAN</td><td><span class="mono">conf t; vlan 10; name IT-ADMIN</span></td><td><span class="mono">PUT /restconf/data/Cisco-IOS-XE-native:native/vlan</span> (idempotent)</td></tr>
+            <tr><td>Detect change</td><td>Diff CLI captures</td><td>YANG config checksums + <span class="mono">NETCONF &lt;get-config&gt;</span> deltas</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="terminal">
+        <div class="terminal-bar"><i></i><i></i><i></i><span>GET /restconf/data/ietf-interfaces:interfaces — conceptual JSON response</span></div>
+        <pre>{
+  "ietf-interfaces:interface": [
+    {
+      "name": "Vlan20",
+      "type": "iana-if-type:l3ipvlan",
+      "ietf-ip:ipv4": {
+        "address": [
+          { "ip": "10.20.20.1", "netmask": "255.255.255.128" }
+        ]
+      },
+      "description": "GATEWAY VLAN 20 - FINANCE (10.20.20.0/25)",
+      "enabled": true
+    }
+  ]
+}</pre>
+      </div>
+      <p>Same data, machine-readable and schema-validated against the YANG model — this is what management tooling (and a controller) consumes. Telemetry today is Syslog + NTP-aligned timestamps; the production roadmap adds streaming telemetry (gNMI subscribe) and Syslog over TLS.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Pillar 4 · Part 3</p>
+        <h2>Cloud extension readiness — Azure S2S VPN</h2>
+        <p>The IP plan and the R1 edge design already ring-fence everything the Azure hybrid extension needs, so the capstone requires <strong>zero re-addressing</strong>.</p>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Resource</th><th>Block / Value</th><th>Purpose</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Azure-mapped address space</strong></td><td class="mono">10.20.200.0/24</td><td>Reserved for Azure VNet subnets peering into HQ — never allocated on-prem</td></tr>
+            <tr><td><strong>Tunnel transit</strong></td><td class="mono">10.20.254.8/30</td><td>R1 Tunnel0 = 10.20.254.9 — point-to-point transit inside the IPsec tunnel</td></tr>
+            <tr><td><strong>BGP peering</strong></td><td class="mono">eBGP ASN 65001 ↔ 65515</td><td>R1 ↔ Azure VPN Gateway via 169.254.21.0/30 inside the tunnel</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="terminal">
+        <div class="terminal-bar"><i></i><i></i><i></i><span>S2S VPN design overview (Project 5)</span></div>
+        <pre>Nairobi HQ (R1-HQ-EDGE) ============== IPsec/IKEv2 S2S ============ Azure VPN Gateway
+  Tunnel0: 10.20.254.9/30                                  10.20.254.10/30 (Azure side)
+  eBGP: 169.254.21.2 (ASN 65001)                           169.254.21.1 (ASN 65515)
+  Advertises: 10.20.0.0/16 (summary)                       Advertises: 10.20.200.0/24</pre>
+      </div>
+      <ol class="note-list">
+        <li><strong>Address-space discipline:</strong> reserving 10.20.200.0/24 today prevents an accidental DHCP expansion from colliding with Azure tomorrow — the #1 rework cause in hybrid migrations.</li>
+        <li><strong>Edge discipline:</strong> EDGE-INBOUND and NAT-PERMITTED were written so that adding one tunnel interface + IKEv2 profile does not require touching the zero-trust ACL matrix.</li>
+        <li><strong>Skills path:</strong> demonstrates understanding that cloud integration is a routing + identity + IPsec problem, not a UI wizard.</li>
+      </ol>
+      <div class="callout">
+        <strong>Template ready:</strong> the IKEv2 proposal/policy/keyring/profile, Tunnel0 and the BGP block are pre-written in <a href="04-automation-and-cloud-readiness/azure-vpn-tunnel-template.cfg" target="_blank" rel="noopener">azure-vpn-tunnel-template.cfg</a> — commented, <strong>NOT applied</strong>, and applied only during Project 5 alongside the Azure VPN Gateway deployment.
+      </div>
+      <p><a class="card-link" href="04-automation-and-cloud-readiness/automation-brief.md" target="_blank" rel="noopener">Automation brief →</a> &nbsp;·&nbsp; <a class="card-link" href="04-automation-and-cloud-readiness/sdn-rest-api-model.md" target="_blank" rel="noopener">SDN / REST model →</a> &nbsp;·&nbsp; <a class="card-link" href="04-automation-and-cloud-readiness/azure-vpn-reservation.md" target="_blank" rel="noopener">Azure reservation →</a></p>
+    </div>
+  </section>
+</main>
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <p class="f-title">Savannah Logistics Ltd. — Multi-Branch Enterprise Campus Network</p>
+      <p class="f-sub">Zero-Trust Segmentation &amp; WAN Architecture · CCNA 200-301 aligned · Nairobi HQ + Mombasa Branch · Designed and documented by peterken-365</p>
+    </div>
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <a href="index.html">Overview</a>
+      <a href="topology.html">Topology</a>
+      <a href="ip-plan.html">IP Plan</a>
+      <a href="switching-routing.html">Design</a>
+      <a href="security.html">Security</a>
+      <a href="automation.html">Automation</a>
+      <a href="verification.html">Verification</a>
+      <a href="https://github.com/peterken-365/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture" target="_blank" rel="noopener">Repository</a>
+    </nav>
+  </div>
+  <div class="container footer-base">
+    <p>© <span id="year">2026</span> peterken-365 — Junior Network &amp; Security Architect portfolio project.</p>
+    <p>Configs are lab/design values — rotate credentials before production deployment.</p>
+  </div>
+</footer>
+<script src="script.js"></script>
+</body>
+</html>
