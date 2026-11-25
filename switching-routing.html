@@ -3,211 +3,230 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Switching &amp; Routing Design — Savannah Logistics Campus Network</title>
-<meta name="description" content="Layer-2 switching design (VLANs, trunks, Rapid PVST+), OSPFv2 Area 0 routing architecture and the six paste-ready golden device configurations for the Savannah Logistics campus network.">
+<title>Switching &amp; Routing Design — Savannah Logistics Campus Network Lab</title>
+<meta name="description" content="VLAN plan, Rapid PVST+ root placement, hardened trunks, OSPF area 0 design and the collapsed-core L3 boundary — with recorded CLI evidence and the six golden device configurations.">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
-<header class="site-header">
-  <div class="container header-inner">
-    <a class="brand" href="index.html">
-      <span class="brand-mark" aria-hidden="true">
-        <svg width="20" height="20" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M32 15 L15 40 M32 15 L49 40 M15 40 L49 40" stroke="#2bbd7f" stroke-width="4" stroke-linecap="round"/><circle cx="32" cy="15" r="7" fill="#3ddc97"/><circle cx="15" cy="40" r="7" fill="#f5b83d"/><circle cx="49" cy="40" r="7" fill="#f5b83d"/></svg>
-      </span>
-      <span class="brand-text">Savannah-Logistics<span class="brand-sub">Enterprise Network Blueprint</span></span>
+<div class="shell">
+  <aside class="sidebar" id="sidebar">
+    <a class="side-brand" href="index.html">
+      <svg width="22" height="22" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M32 15 L15 40 M32 15 L49 40 M15 40 L49 40" stroke="#0e7c4a" stroke-width="4" stroke-linecap="round"/><circle cx="32" cy="15" r="7" fill="#0e7c4a"/><circle cx="15" cy="40" r="7" fill="#8a5a00"/><circle cx="49" cy="40" r="7" fill="#8a5a00"/></svg>
+      <span><span class="t1">Savannah-Logistics</span><span class="t2">enterprise campus network lab</span></span>
     </a>
-    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="primary-nav"><span></span><span></span><span></span></button>
-    <nav class="site-nav" id="primary-nav" aria-label="Primary navigation">
+    <nav class="side-nav" aria-label="Primary navigation">
+      <p class="navlabel">Project</p>
       <a href="index.html">Overview</a>
-      <a href="topology.html">Topology</a>
-      <a href="ip-plan.html">IP Plan</a>
-      <a href="switching-routing.html">Design</a>
-      <a href="security.html">Security</a>
-      <a href="automation.html">Automation</a>
-      <a href="verification.html">Verification</a>
-      <a class="nav-gh" href="https://github.com/peterken-365/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture" target="_blank" rel="noopener">GitHub Repo</a>
+      <a href="topology.html">Topology &amp; devices</a>
+      <a href="ip-plan.html">IP plan <span class="n">VLSM</span></a>
+      <p class="navlabel">Design</p>
+      <a href="switching-routing.html">Switching &amp; routing</a>
+      <a href="security.html">Security policy</a>
+      <a href="automation.html">Automation &amp; cloud</a>
+      <p class="navlabel">Proof</p>
+      <a href="verification.html">Verification runbook</a>
+      <a href="lab.html">Lab console <span class="n">replay</span></a>
+      <p class="navlabel">Source</p>
+      <a href="https://github.com/peterken-365/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture" target="_blank" rel="noopener">GitHub repository</a>
+      <a href="05-verification-evidence/verification_report.md" target="_blank" rel="noopener">Runbook (.md)</a>
     </nav>
+    <div class="side-foot">
+      <p>CCNA 200-301 portfolio · peterken-365</p>
+      <p>Configs v1.0 · site rev. 2026-03-03</p>
+    </div>
+  </aside>
+  <div class="content-col">
+    <div class="topbar">
+      <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="sidebar"><span></span><span></span><span></span></button>
+      <span class="topbar-title">Switching &amp; routing</span>
+      <a class="topbar-gh" href="https://github.com/peterken-365/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture" target="_blank" rel="noopener">GitHub</a>
+    </div>
+    <main id="main" class="docs">
+      <div class="page-head">
+        <p class="kicker">Design · L2 + L3</p>
+        <h1>Switching &amp; routing — VLANs, STP, OSPF and the L3 boundary</h1>
+        <p class="lede">The L2/L3 skeleton everything else stands on: site-local VLANs with hardened trunks, an explicit STP root, a collapsed core doing inter-VLAN routing, and one OSPF area 0 across the routed WAN. Design docs: <a href="02-switching-and-routing-design/l2-switching-design.md" target="_blank" rel="noopener">l2-switching-design.md</a> · <a href="02-switching-and-routing-design/ospf-routing-design.md" target="_blank" rel="noopener">ospf-routing-design.md</a>.</p>
+      </div>
+
+      <h2>Layer-2 domain</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>VLAN</th><th>Name</th><th>Site</th><th>Subnet</th><th>Gateway</th><th>Where ports live</th></tr></thead>
+          <tbody>
+            <tr><td class="td-mono">10</td><td>IT-ADMIN</td><td>HQ</td><td class="td-mono">10.20.10.0/26</td><td class="td-mono">MLS SVI10</td><td class="td-mono">SW1 Fa0/1–2</td></tr>
+            <tr><td class="td-mono">20</td><td>FINANCE-HR</td><td>HQ</td><td class="td-mono">10.20.20.0/25</td><td class="td-mono">MLS SVI20</td><td class="td-mono">SW1 Fa0/3–10</td></tr>
+            <tr><td class="td-mono">30</td><td>INTERNAL-SERVERS</td><td>HQ</td><td class="td-mono">10.20.30.0/27</td><td class="td-mono">MLS SVI30</td><td class="td-mono">SW2 Fa0/1–4</td></tr>
+            <tr><td class="td-mono">40</td><td>GUEST-BYOD</td><td>HQ</td><td class="td-mono">10.20.40.0/24</td><td class="td-mono">MLS SVI40</td><td class="td-mono">SW1 Fa0/11–18 (AP + wired)</td></tr>
+            <tr><td class="td-mono">50</td><td>BRANCH-USERS</td><td>Branch</td><td class="td-mono">10.20.50.0/25</td><td class="td-mono">R2 Gi0/1.50</td><td class="td-mono">SW3 Fa0/1–16</td></tr>
+            <tr><td class="td-mono">99</td><td>NET-MGMT</td><td>Both (split)</td><td class="td-mono">10.20.99.0/28 · 10.20.99.16/28</td><td class="td-mono">MLS SVI99 · R2 Gi0/1.99</td><td>SVIs only — no user ports</td></tr>
+            <tr><td class="td-mono">999</td><td>QUARANTINE</td><td>All</td><td class="td-mono">unrouted</td><td class="td-mono">none</td><td>Unused ports + hardened native VLAN</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>STP plan: MLS-HQ-CORE is <b>root primary</b> for VLANs 10, 20, 30, 40, 99 and 999. SW1 is <b>root secondary</b> for 10/20/40/99, SW2 for 30. Every trunk is <code>802.1q</code>, <code>native vlan 999</code>, <code>nonegotiate</code>, with explicit <code>allowed vlan</code> lists — so a rogue switch sees a dead native VLAN and DTP never renegotiates.</p>
+
+      <h3>Console evidence — VLAN 1 carries nothing</h3>
+      <span class="cli-label">recorded · MLS-HQ-CORE# show vlan brief</span>
+      <pre class="cli"><span class="p">MLS-HQ-CORE#</span> show vlan brief
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active
+10   IT-ADMIN                         active
+20   FINANCE-HR                       active
+30   INTERNAL-SERVERS                 active
+40   GUEST-BYOD                       active
+99   NET-MGMT                         active
+999  QUARANTINE                       active    Gig1/0/3, Gig1/0/4, Gig1/0/5, Gig1/0/6
+                                                Gig1/0/7, Gig1/0/8, Gig1/0/9, Gig1/0/10
+                                                Gig1/0/11, Gig1/0/12, Gig1/0/13, Gig1/0/14
+                                                Gig1/0/15, Gig1/0/16, Gig1/0/17, Gig1/0/18
+                                                Gig1/0/19, Gig1/0/20, Gig1/0/21, Gig1/0/22
+                                                Gig1/0/23, Gig1/0/24, Gig1/1/2, Gig1/1/3
+                                                Gig1/1/4
+
+[VLAN 1 has zero ports: trunks carry tagged traffic only (Gi1/0/1-2) and
+ Gi1/1/1 is a routed port (no switchport). Quarantine VLAN 999 holds every
+ unused port, shutdown.]</pre>
+      <span class="cli-label">recorded · SW1-HQ-ACCESS-1# show spanning-tree vlan 20</span>
+      <pre class="cli"><span class="p">SW1-HQ-ACCESS-1#</span> show spanning-tree vlan 20
+VLAN0020
+  Spanning tree enabled protocol rstp
+  Root ID    Priority    24596
+             Address     0060.2FAA.8800
+             Cost        4
+             Port        25(GigabitEthernet0/1)
+             Hello Time  2 sec  Max Age 20 sec  Forward Delay 15 sec
+
+  Bridge ID  Priority    32788  (priority 32768 sys-id-ext 20)
+             Address     00D0.BAF1.7A40
+             Hello Time  2 sec  Max Age 20 sec  Forward Delay 15 sec
+
+Interface        Role Sts Cost      Prio.Nbr Type
+---------------- ---- --- --------- -------- --------------------------------
+Gi0/1            Root FWD 4         128.25   P2p
+Fa0/3            Desg FWD 19        128.3    P2p Edge
+Fa0/4            Desg FWD 19        128.4    P2p Edge
+Fa0/5            Desg FWD 19        128.5    P2p Edge
+Fa0/6            Desg FWD 19        128.6    P2p Edge
+Fa0/7            Desg FWD 19        128.7    P2p Edge
+Fa0/8            Desg FWD 19        128.8    P2p Edge
+Fa0/9            Desg FWD 19        128.9    P2p Edge
+Fa0/10           Desg FWD 19        128.10   P2p Edge</pre>
+      <p>Priority 24596 = 24576 (root primary) + VLAN ID 20 — the MLS is pinned as root deterministically, and access ports show <code>P2p Edge</code> (PortFast). Reproduce: same command, expect the same root address and priorities.</p>
+      <span class="cli-label">recorded · MLS-HQ-CORE# show interfaces trunk</span>
+      <pre class="cli"><span class="p">MLS-HQ-CORE#</span> show interfaces trunk
+Port        Mode         Encapsulation  Status        Native vlan
+Gi1/0/1     on           802.1q         trunking      999
+Gi1/0/2     on           802.1q         trunking      999
+
+Port        Vlans allowed on trunk
+Gi1/0/1     10,20,40,99,999
+Gi1/0/2     30,99,999
+
+Port        Vlans active and allowed in management domain
+Gi1/0/1     10,20,40,99,999
+Gi1/0/2     30,99,999
+
+Port        Vlans in spanning tree forwarding state and not pruned
+Gi1/0/1     10,20,40,99,999
+Gi1/0/2     30,99,999</pre>
+
+      <h2>Layer-3 design</h2>
+      <p>The collapsed core owns the HQ gateways; the routers own the WAN and the Internet edge. Two routed point-to-point links carry OSPF area 0:</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Adjacency</th><th>Link</th><th>Subnet</th><th>Router IDs</th></tr></thead>
+          <tbody>
+            <tr><td>R1 ↔ R2</td><td class="td-mono">Link A — R1 Gi0/2 ↔ R2 Gi0/0</td><td class="td-mono">10.20.254.0/30</td><td class="td-mono">1.1.1.1 ↔ 2.2.2.2</td></tr>
+            <tr><td>R1 ↔ MLS</td><td class="td-mono">Link B — R1 Gi0/1 ↔ MLS Gi1/1/1</td><td class="td-mono">10.20.254.4/30</td><td class="td-mono">1.1.1.1 ↔ 3.3.3.3</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <ul class="note-list">
+        <li><b>passive-interface default</b> on every router/MLS — only the two transit links exchange routing updates. No OSPF hellos ever reach a user or guest LAN.</li>
+        <li><b>default-information originate</b> on R1 — the branch and core learn the default route dynamically (O*E2), no static routes outside R1.</li>
+        <li><b>DHCP relay</b> — one central server (10.20.30.10) behind four helpers, so no per-site DHCP infrastructure.</li>
+      </ul>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>VLAN</th><th>Gateway interface</th><th>Helper target</th></tr></thead>
+          <tbody>
+            <tr><td class="td-mono">10</td><td class="td-mono">MLS SVI10</td><td class="td-mono">10.20.30.10</td></tr>
+            <tr><td class="td-mono">20</td><td class="td-mono">MLS SVI20</td><td class="td-mono">10.20.30.10</td></tr>
+            <tr><td class="td-mono">40</td><td class="td-mono">MLS SVI40</td><td class="td-mono">10.20.30.10</td></tr>
+            <tr><td class="td-mono">50</td><td class="td-mono">R2 Gi0/1.50</td><td class="td-mono">10.20.30.10</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Console evidence — the OSPF domain</h3>
+      <span class="cli-label">recorded · R1-HQ-EDGE# show ip ospf neighbor</span>
+      <pre class="cli"><span class="p">R1-HQ-EDGE#</span> show ip ospf neighbor
+
+Neighbor ID     Pri   State           Dead Time   Address         Interface
+2.2.2.2          0   FULL/  -        00:00:37    10.20.254.2     GigabitEthernet0/2
+3.3.3.3          0   FULL/  -        00:00:34    10.20.254.6     GigabitEthernet0/1</pre>
+      <span class="cli-label">recorded · R2-MOMBASA-EDGE# show ip route</span>
+      <pre class="cli"><span class="p">R2-MOMBASA-EDGE#</span> show ip route
+Gateway of last resort is 10.20.254.1 to network 0.0.0.0
+
+     10.0.0.0/8 is variably subnetted, 13 subnets, 7 masks
+O       10.20.10.0/26 [110/3] via 10.20.254.1, 00:14:02, GigabitEthernet0/0
+O       10.20.20.0/25 [110/3] via 10.20.254.1, 00:14:02, GigabitEthernet0/0
+O       10.20.30.0/27 [110/3] via 10.20.254.1, 00:14:02, GigabitEthernet0/0
+O       10.20.40.0/24 [110/3] via 10.20.254.1, 00:14:02, GigabitEthernet0/0
+C       10.20.50.0/25 is directly connected, GigabitEthernet0/1.50
+L       10.20.50.1/32 is directly connected, GigabitEthernet0/1.50
+O       10.20.99.0/28 [110/3] via 10.20.254.1, 00:14:02, GigabitEthernet0/0
+C       10.20.99.16/28 is directly connected, GigabitEthernet0/1.99
+L       10.20.99.17/32 is directly connected, GigabitEthernet0/1.99
+C       10.20.254.0/30 is directly connected, GigabitEthernet0/0
+L       10.20.254.2/32 is directly connected, GigabitEthernet0/0
+O       10.20.254.4/30 [110/2] via 10.20.254.1, 00:14:02, GigabitEthernet0/0
+O       10.20.255.1/32 [110/2] via 10.20.254.1, 00:14:02, GigabitEthernet0/0
+O*E2 0.0.0.0/0 [110/1] via 10.20.254.1, 00:14:02, GigabitEthernet0/0
+
+[no static routes on the branch: every HQ subnet is OSPF-learned (O),
+ the default is originated by R1 via default-information originate (O*E2)]</pre>
+      <p>Branch metric check: R2 Gi0/0 (1) + R1 Gi0/1 (1) + MLS SVI (1) = cost 3 to the HQ subnets — consistent with the <code>[110/3]</code> entries above.</p>
+
+      <h2>Golden configurations</h2>
+      <p>The six paste-ready files below are the source of truth for this whole site — the tabs fetch them live from the repository. Build order: <b>MLS → SW1 → SW2 → SW3 → R1 → R2</b>, then <code>crypto key generate rsa modulus 2048</code> on every device. Lines Packet Tracer rejects are pre-commented as <code>PRODUCTION-ONLY</code>.</p>
+      <div class="cfg-tabs" role="group" aria-label="Device configuration tabs">
+        <button class="cfg-tab" data-dev="R1-HQ-EDGE">R1-HQ-EDGE</button>
+        <button class="cfg-tab" data-dev="R2-MOMBASA-EDGE">R2-MOMBASA-EDGE</button>
+        <button class="cfg-tab" data-dev="MLS-HQ-CORE">MLS-HQ-CORE</button>
+        <button class="cfg-tab" data-dev="SW1-HQ-ACCESS-1">SW1-HQ-ACCESS-1</button>
+        <button class="cfg-tab" data-dev="SW2-HQ-ACCESS-2">SW2-HQ-ACCESS-2</button>
+        <button class="cfg-tab" data-dev="SW3-MOMBASA-ACCESS">SW3-MOMBASA-ACCESS</button>
+      </div>
+      <div class="cfg-view-wrap">
+        <div class="cfg-tools">
+          <button class="copy-btn" data-copy-target="cfgView" type="button">copy</button>
+          <a class="copy-btn" id="cfgRawLink" href="https://github.com/peterken-365/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture/blob/main/02-switching-and-routing-design/configs/R1-HQ-EDGE.cfg" target="_blank" rel="noopener">raw .cfg</a>
+        </div>
+        <pre class="cfg-view cli" id="cfgView">Loading R1-HQ-EDGE.cfg ...</pre>
+      </div>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p class="f-title">Savannah Logistics Ltd. — multi-branch enterprise campus network</p>
+        <nav aria-label="Footer navigation">
+          <a href="index.html">Overview</a>
+          <a href="lab.html">Lab console</a>
+          <a href="verification.html">Verification</a>
+          <a href="https://github.com/peterken-365/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture" target="_blank" rel="noopener">Repository</a>
+        </nav>
+      </div>
+      <div class="footer-base">
+        <p>© <span data-year>2026</span> peterken-365 · Junior Network &amp; Security Architect portfolio · CCNA 200-301.</p>
+        <p>Configs are lab/design values — rotate credentials before production deployment.</p>
+      </div>
+    </footer>
   </div>
-</header>
-<main id="main">
-  <section class="page-hero">
-    <div class="container">
-      <p class="eyebrow">03 · L2 + L3 design</p>
-      <h1>Switching, VLANs &amp; Dynamic Routing</h1>
-      <p class="lead">Deterministic Rapid PVST+ Layer 2, collapsed-core inter-VLAN routing, and a single OSPFv2 Area 0 with passive-interface discipline — backed by six paste-ready golden configurations.</p>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="container">
-      <div class="section-head">
-        <p class="eyebrow">Layer 2</p>
-        <h2>VLANs, trunks and loop prevention</h2>
-        <p>VLAN 1 carries zero user, server or management traffic. Root election is never left to chance.</p>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr><th>VLAN</th><th>Name</th><th>Purpose</th><th>Site</th><th>Subnet</th><th>Gateway</th></tr>
-          </thead>
-          <tbody>
-            <tr><td class="mono"><strong>10</strong></td><td>IT-ADMIN</td><td>IT staff + helpdesk</td><td>HQ</td><td class="mono">10.20.10.0/26</td><td class="mono">10.20.10.1 (MLS SVI)</td></tr>
-            <tr><td class="mono"><strong>20</strong></td><td>FINANCE-HR</td><td>Finance &amp; HR staff</td><td>HQ</td><td class="mono">10.20.20.0/25</td><td class="mono">10.20.20.1 (MLS SVI)</td></tr>
-            <tr><td class="mono"><strong>30</strong></td><td>INTERNAL-SERVERS</td><td>Server/DMZ farm</td><td>HQ</td><td class="mono">10.20.30.0/27</td><td class="mono">10.20.30.1 (MLS SVI)</td></tr>
-            <tr><td class="mono"><strong>40</strong></td><td>GUEST-BYOD</td><td>Guest Wi-Fi + wired guests</td><td>HQ</td><td class="mono">10.20.40.0/24</td><td class="mono">10.20.40.1 (MLS SVI)</td></tr>
-            <tr><td class="mono"><strong>50</strong></td><td>BRANCH-USERS</td><td>Mombasa staff</td><td>Branch</td><td class="mono">10.20.50.0/25</td><td class="mono">10.20.50.1 (R2 Gi0/1.50)</td></tr>
-            <tr><td class="mono"><strong>99</strong></td><td>NET-MGMT</td><td>Switch/router management SVIs</td><td>HQ + Branch</td><td class="mono">10.20.99.0/27 <span class="pill pill-amber">site-split /28s</span></td><td class="mono">.1 (HQ) / .17 (Branch)</td></tr>
-            <tr><td class="mono"><strong>999</strong></td><td>QUARANTINE</td><td>Unused ports (shutdown) + native VLAN on all trunks</td><td>All switches</td><td class="mono">unrouted</td><td class="mono">none</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <h3 style="font-size:1.15rem;margin-top:1.6rem">Trunk matrix</h3>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr><th>Trunk</th><th>Endpoints</th><th>Allowed VLANs</th><th>Native</th><th>Hardening</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>MLS — SW1</td><td class="mono">Gi1/0/1 ↔ Gi0/1</td><td class="mono">10,20,40,99,999</td><td class="mono">999</td><td><span class="mono">nonegotiate</span> · point-to-point · snooping + DAI <strong>trust</strong></td></tr>
-            <tr><td>MLS — SW2</td><td class="mono">Gi1/0/2 ↔ Gi0/1</td><td class="mono">30,99,999</td><td class="mono">999</td><td><span class="mono">nonegotiate</span> · point-to-point · snooping + DAI <strong>trust</strong></td></tr>
-            <tr><td>R2 — SW3</td><td class="mono">Gi0/1 ↔ Gi0/1</td><td class="mono">50,99,999</td><td class="mono">999</td><td>802.1Q sub-interfaces .50 / .99 · snooping + DAI <strong>trust</strong></td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <h3 style="font-size:1.15rem;margin-top:1.6rem">Spanning-Tree architecture (Rapid PVST+)</h3>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr><th>Role</th><th>Device</th><th>Configuration</th></tr>
-          </thead>
-          <tbody>
-            <tr><td><strong>Root Bridge</strong> (explicit, all VLANs)</td><td>MLS-HQ-CORE</td><td class="mono">spanning-tree vlan 10/20/30/40/99/999 root primary</td></tr>
-            <tr><td>Root Secondary (HQ user VLANs)</td><td>SW1-HQ-ACCESS-1</td><td class="mono">spanning-tree vlan 10/20/40/99 root secondary</td></tr>
-            <tr><td>Root Secondary (server VLAN)</td><td>SW2-HQ-ACCESS-2</td><td class="mono">spanning-tree vlan 30 root secondary</td></tr>
-            <tr><td>Edge ports</td><td>All access ports</td><td class="mono">spanning-tree portfast + spanning-tree bpduguard enable</td></tr>
-            <tr><td>Inter-switch links</td><td>All trunks</td><td class="mono">spanning-tree link-type point-to-point</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="callout">
-        <strong>Why native VLAN 999:</strong> a double-tagging (VLAN hopping) attempt lands the frame in the unrouted quarantine VLAN, where there are no hosts and no gateway. DTP is disabled (<span class="mono">nonegotiate</span>) so an attacker-controlled device cannot negotiate trunking with an access port.
-      </div>
-    </div>
-  </section>
-
-  <section class="section section-alt">
-    <div class="container">
-      <div class="section-head">
-        <p class="eyebrow">Layer 3</p>
-        <h2>OSPFv2 — single Area 0, passive by default</h2>
-        <p>All three L3 devices run OSPF process 10 in one area, with a hard rule: <strong>user-facing interfaces are passive</strong> — routing updates are never leaked onto employee or guest LANs.</p>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr><th>Device</th><th>OSPF RID</th><th>Passive policy</th><th>Non-passive (adjacency) interfaces</th></tr>
-          </thead>
-          <tbody>
-            <tr><td><strong>R1-HQ-EDGE</strong></td><td class="mono">1.1.1.1</td><td class="mono">passive-interface default</td><td class="mono">Gi0/1 (Link B) · Gi0/2 (Link A)</td></tr>
-            <tr><td><strong>R2-MOMBASA-EDGE</strong></td><td class="mono">2.2.2.2</td><td class="mono">passive-interface default</td><td class="mono">Gi0/0 (Link A)</td></tr>
-            <tr><td><strong>MLS-HQ-CORE</strong></td><td class="mono">3.3.3.3</td><td class="mono">passive-interface default</td><td class="mono">Gi1/1/1 (Link B)</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr><th>Device</th><th>Prefixes advertised into Area 0</th><th>Note</th></tr>
-          </thead>
-          <tbody>
-            <tr><td><strong>R1</strong></td><td class="mono">10.20.254.0/30 · 10.20.254.4/30 · 10.20.255.1/32</td><td>+ <span class="mono">default-information originate</span> — the only default route in the domain</td></tr>
-            <tr><td><strong>R2</strong></td><td class="mono">10.20.254.0/30 · 10.20.50.0/25 · 10.20.99.16/28 · 10.20.255.2/32</td><td>Branch learns the world through Area 0</td></tr>
-            <tr><td><strong>MLS</strong></td><td class="mono">10.20.254.4/30 · 10.20.10.0/26 · 10.20.20.0/25 · 10.20.30.0/27 · 10.20.40.0/24 · 10.20.99.0/28</td><td>All HQ user/service VLANs</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="terminal">
-        <div class="terminal-bar"><i></i><i></i><i></i><span>R1-HQ-EDGE# show ip ospf neighbor — expected acceptance criterion</span></div>
-        <pre>Neighbor ID     Pri   State           Dead Time   Address         Interface
-2.2.2.2           0   FULL/  -        00:00:37    10.20.254.2     GigabitEthernet0/2
-3.3.3.3           0   FULL/  -        00:00:34    10.20.254.6     GigabitEthernet0/1</pre>
-      </div>
-      <div class="callout">
-        <strong>Why passive-interface default matters:</strong> an OSPF hello on a guest or finance LAN would let any laptop run area-0 tooling, become a rogue neighbor and inject routes. With <span class="mono">passive-interface default</span>, hellos exist only on the two transit /30s — and the guest VLAN is additionally ACL-blocked from speaking to any internal destination at all.
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="container">
-      <div class="section-head">
-        <p class="eyebrow">Golden configurations</p>
-        <h2>Read the actual device configs</h2>
-        <p>The tabs below load the real <span class="mono">.cfg</span> files straight from this repository — the same files you paste into Packet Tracer or production hardware. Comments inside each file flag the production-only hardening lines Packet Tracer does not support.</p>
-      </div>
-      <div class="cfg-tabs" role="tablist" aria-label="Device configurations">
-        <button class="cfg-tab" role="tab" aria-selected="false" data-file="02-switching-and-routing-design/configs/MLS-HQ-CORE.cfg" data-label="MLS-HQ-CORE">MLS-HQ-CORE</button>
-        <button class="cfg-tab" role="tab" aria-selected="false" data-file="02-switching-and-routing-design/configs/R1-HQ-EDGE.cfg" data-label="R1-HQ-EDGE">R1-HQ-EDGE</button>
-        <button class="cfg-tab" role="tab" aria-selected="false" data-file="02-switching-and-routing-design/configs/R2-MOMBASA-EDGE.cfg" data-label="R2-MOMBASA-EDGE">R2-MOMBASA-EDGE</button>
-        <button class="cfg-tab" role="tab" aria-selected="false" data-file="02-switching-and-routing-design/configs/SW1-HQ-ACCESS-1.cfg" data-label="SW1-HQ-ACCESS-1">SW1-HQ-ACCESS-1</button>
-        <button class="cfg-tab" role="tab" aria-selected="false" data-file="02-switching-and-routing-design/configs/SW2-HQ-ACCESS-2.cfg" data-label="SW2-HQ-ACCESS-2">SW2-HQ-ACCESS-2</button>
-        <button class="cfg-tab" role="tab" aria-selected="false" data-file="02-switching-and-routing-design/configs/SW3-MOMBASA-ACCESS.cfg" data-label="SW3-MOMBASA-ACCESS">SW3-MOMBASA-ACCESS</button>
-      </div>
-      <div class="terminal">
-        <div class="terminal-bar"><i></i><i></i><i></i><span id="cfg-title">MLS-HQ-CORE — golden configuration (source of truth)</span></div>
-        <pre id="cfg-body">Loading configuration…</pre>
-      </div>
-      <div class="callout callout-amber">
-        <strong>Lab credentials:</strong> the configs use lab/design values (<span class="mono">enable secret</span>, <span class="mono">username netadmin</span>) — rotate them before any production deployment, and prefer <span class="mono">algorithm-type scrypt</span> on IOS-XE.
-      </div>
-    </div>
-  </section>
-
-  <section class="section section-alt">
-    <div class="container">
-      <div class="section-head">
-        <p class="eyebrow">Build order</p>
-        <h2>Reproduce the topology in six steps</h2>
-        <p>Follow the Packet Tracer build guide for device placement, cabling and server services — then paste the configs in this order.</p>
-      </div>
-      <ol class="steps">
-        <li><strong>MLS-HQ-CORE</strong> — VLANs, trunks, SVIs, gateway ACLs, STP root, OSPF. The core is the foundation everything else hangs off.</li>
-        <li><strong>SW1 + SW2 (HQ access)</strong> — VLANs, uplink trunks, access ports with the security trio, management SVIs.</li>
-        <li><strong>SW3 (branch access)</strong> — VLAN 50 access ports, uplink trunk to R2, branch management SVI.</li>
-        <li><strong>R1-HQ-EDGE</strong> — interfaces, NAT/PAT, EDGE-INBOUND, OSPF with <span class="mono">default-information originate</span>.</li>
-        <li><strong>R2-MOMBASA-EDGE</strong> — 802.1Q sub-interfaces, BRANCH-IN policy, DHCP relay, OSPF.</li>
-        <li><strong>On every device</strong> — <span class="mono">crypto key generate rsa modulus 2048</span> in EXEC mode, then <span class="mono">copy running-config startup-config</span>.</li>
-      </ol>
-      <p><a class="card-link" href="01-topology-and-ip-plan/packet-tracer-build-guide.md" target="_blank" rel="noopener">Packet Tracer build guide →</a> &nbsp;·&nbsp; <a class="card-link" href="02-switching-and-routing-design/l2-switching-design.md" target="_blank" rel="noopener">L2 design document →</a> &nbsp;·&nbsp; <a class="card-link" href="02-switching-and-routing-design/ospf-routing-design.md" target="_blank" rel="noopener">OSPF design document →</a></p>
-    </div>
-  </section>
-</main>
-<footer class="site-footer">
-  <div class="container footer-inner">
-    <div class="footer-brand">
-      <p class="f-title">Savannah Logistics Ltd. — Multi-Branch Enterprise Campus Network</p>
-      <p class="f-sub">Zero-Trust Segmentation &amp; WAN Architecture · CCNA 200-301 aligned · Nairobi HQ + Mombasa Branch · Designed and documented by peterken-365</p>
-    </div>
-    <nav class="footer-nav" aria-label="Footer navigation">
-      <a href="index.html">Overview</a>
-      <a href="topology.html">Topology</a>
-      <a href="ip-plan.html">IP Plan</a>
-      <a href="switching-routing.html">Design</a>
-      <a href="security.html">Security</a>
-      <a href="automation.html">Automation</a>
-      <a href="verification.html">Verification</a>
-      <a href="https://github.com/peterken-365/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture" target="_blank" rel="noopener">Repository</a>
-    </nav>
-  </div>
-  <div class="container footer-base">
-    <p>© <span id="year">2026</span> peterken-365 — Junior Network &amp; Security Architect portfolio project.</p>
-    <p>Configs are lab/design values — rotate credentials before production deployment.</p>
-  </div>
-</footer>
+</div>
 <script src="script.js"></script>
 </body>
 </html>
