@@ -118,7 +118,7 @@ MLS-HQ-CORE# show access-lists GUEST-IN
 Extended IP access list GUEST-IN
     10 permit udp any any eq bootps
     20 permit udp any any eq domain
-    30 deny ip any 10.20.0.0 0.0.255.255 (8 match(es))
+    30 deny ip any 10.20.0.0 0.0.255.255 log (8 match(es))
     40 permit tcp any any eq www
     50 permit tcp any any eq 443
     60 deny ip any any log
@@ -167,13 +167,14 @@ Address: 198.51.100.10
 R1-HQ-EDGE# show ip nat translations
 Pro  Inside global      Inside local       Outside local      Outside global
 tcp 203.0.113.2:1025   10.20.40.100:1025  198.51.100.10:80   198.51.100.10:80
-tcp 203.0.113.2:1025   10.20.40.100:1025  198.51.100.10:80   198.51.100.10:80
-udp 203.0.113.2:1026   10.20.40.100:1026  10.20.30.12:53     10.20.30.12:53
+tcp 203.0.113.2:1026   10.20.40.100:1026  198.51.100.10:80   198.51.100.10:80
+tcp 203.0.113.2:1027   10.20.50.50:1027   198.51.100.10:80   198.51.100.10:80
 ```
 
-   Wait — the UDP 53 entry to an internal destination is the *control* case: internal-to-internal
-   traffic must NOT appear here. If it does, `NAT-PERMITTED` was mis-ordered. Only entries whose
-   **outside** is non-enterprise (198.51.100.10) are valid.
+   **Control case:** every entry above has a non-enterprise **outside** (198.51.100.10).
+   Internal-to-internal sessions (e.g., guest DNS to 10.20.30.12) must NEVER appear here —
+   `NAT-PERMITTED` line 10 denies translating enterprise→enterprise. If such an entry shows up,
+   the NAT criteria list was mis-ordered.
 
 5. `show ip nat statistics` on R1 → outside interface `GigabitEthernet0/0`, active translations
    and hit counters increasing.
@@ -206,18 +207,28 @@ Neighbor ID     Pri   State           Dead Time   Address         Interface
 
 ```
 R2-MOMBASA-EDGE# show ip route
-     10.0.0.0/8 is variably subnetted, 11 subnets, 3 masks
-C       10.20.254.0/30 is directly connected, GigabitEthernet0/0
+Gateway of last resort is 10.20.254.1 to network 0.0.0.0
+
+     10.0.0.0/8 is variably subnetted, 13 subnets, 7 masks
+O       10.20.10.0/26 [110/3] via 10.20.254.1, 00:14:02, GigabitEthernet0/0
+O       10.20.20.0/25 [110/3] via 10.20.254.1, 00:14:02, GigabitEthernet0/0
+O       10.20.30.0/27 [110/3] via 10.20.254.1, 00:14:02, GigabitEthernet0/0
+O       10.20.40.0/24 [110/3] via 10.20.254.1, 00:14:02, GigabitEthernet0/0
 C       10.20.50.0/25 is directly connected, GigabitEthernet0/1.50
-C       10.20.99.16/28 is directly connected, GigabitEthernet0/1.99
 L       10.20.50.1/32 is directly connected, GigabitEthernet0/1.50
-O       10.20.10.0/26 [110/2] via 10.20.254.1, 00:14:02, GigabitEthernet0/0
-O       10.20.30.0/27 [110/2] via 10.20.254.1, 00:14:02, GigabitEthernet0/0
-O       10.20.99.0/28 [110/2] via 10.20.254.1, 00:14:02, GigabitEthernet0/0
-O       10.20.40.0/24 [110/2] via 10.20.254.1, 00:14:02, GigabitEthernet0/0
+O       10.20.99.0/28 [110/3] via 10.20.254.1, 00:14:02, GigabitEthernet0/0
+C       10.20.99.16/28 is directly connected, GigabitEthernet0/1.99
+L       10.20.99.17/32 is directly connected, GigabitEthernet0/1.99
+C       10.20.254.0/30 is directly connected, GigabitEthernet0/0
+L       10.20.254.2/32 is directly connected, GigabitEthernet0/0
 O       10.20.254.4/30 [110/2] via 10.20.254.1, 00:14:02, GigabitEthernet0/0
+O       10.20.255.1/32 [110/2] via 10.20.254.1, 00:14:02, GigabitEthernet0/0
 O*E2 0.0.0.0/0 [110/1] via 10.20.254.1, 00:14:02, GigabitEthernet0/0
 ```
+
+   Metric note: R2 → HQ subnets costs R2 Gi0/0 (1) + R1 Gi0/1 (1) + MLS SVI (1) = 3, hence
+   `[110/3]`; Link B and R1's loopback are two hops away, hence `[110/2]`; the originated default
+   is `O*E2 [110/1]`. No static routes exist on the branch.
 
 3. From `PC-BR01`, trace the full path:
 
@@ -381,7 +392,7 @@ DNS Server......................: 10.20.30.12
 ```
 SW1-HQ-ACCESS-1# show ip dhcp snooping binding
 MacAddress          IpAddress        Lease(sec)  Type           VLAN  Interface
-------------------  ---------------  ----------  -------------  ----  --------------------
+------------------  ---------------  ----------  -------------  ----  -------------------
 0050.56BE.1102      10.20.20.6       86395       dhcp-snooping   20   FastEthernet0/3
 Total number of bindings: 1
 ```

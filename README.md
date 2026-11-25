@@ -115,6 +115,11 @@ Full matrix with ACL-to-interface bindings:
 Runbook with exact commands and expected outputs:
 [`05-verification-evidence/verification_report.md`](05-verification-evidence/verification_report.md)
 
+Reference transcripts of every test are embedded in the live site's
+[verification page](https://peterken-365.github.io/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture/verification.html),
+and the [Lab Console](https://peterken-365.github.io/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture/lab.html)
+replays the recorded CLI sessions per device (clearly labelled as a replay, not a live device).
+
 ## 7. Repository Structure
 
 ```
@@ -126,7 +131,8 @@ Runbook with exact commands and expected outputs:
 ├── 04-automation-and-cloud-readiness/ # Automation brief, SDN/REST model, Azure VPN reservation,
 │                                      # backup/drift scripts, Ansible inventory, IKEv2 template
 ├── 05-verification-evidence/    # Verification runbook + screenshot checklist (T-01..T-07)
-├── index.html … verification.html  # The live GitHub Pages design website (7 pages)
+├── device-configs/              # Plain-text mirrors of the six golden configs (recruiter-friendly)
+├── index.html … verification.html · lab.html   # Live docs site (8 pages, incl. interactive lab console)
 └── styles.css · script.js · favicon.svg · 404.html   # Website assets
 ```
 
