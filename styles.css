@@ -58,7 +58,7 @@ body {
 /* ---------------------------------------------------------- ops statusline */
 /* CSS-only console chrome: mirrors the recorded lab state, one line, all pages. */
 body::before {
-  content: "SAVANNAH-LOGISTICS // NETOPS-LAB  \u00b7  DEVICES 6/6 UP  \u00b7  OSPF AREA 0 \u2014 ADJ 2/2 FULL  \u00b7  VLANS 10/20/30/40/50/99/999  \u00b7  TESTS T-01\u2026T-07 DOCUMENTED  \u00b7  CONFIGS v1.0  \u00b7  REV 2026-03-03";
+  content: "SAVANNAH-LOGISTICS // NETOPS-LAB  \30b7 DEVICES 6/6 UP  \30b7 OSPF AREA 0 — ADJ 2/2 FULL  \30b7 VLANS 10/20/30/40/50/99/999  \30b7 TESTS T-01…T-07 DOCUMENTED  \30b7 CONFIGS v1.0  \30b7 REV 2026-03-03";
   position: fixed;
   top: 0;
   left: 0;
@@ -158,7 +158,7 @@ a:hover { color: var(--green); text-decoration: underline; text-underline-offset
   color: var(--ink-2);
   text-decoration: none;
 }
-.side-nav a::before { content: "\u203a"; color: var(--line-2); margin-right: 0.45rem; font-weight: 700; }
+.side-nav a::before { content: "›"; color: var(--line-2); margin-right: 0.45rem; font-weight: 700; }
 .side-nav a:hover { background: var(--raise); color: var(--ink); text-decoration: none; }
 .side-nav a:hover::before { color: var(--ink-3); }
 .side-nav a.active {
@@ -257,7 +257,7 @@ h2 {
   font-weight: 700;
 }
 h2::before {
-  content: "\u00a7" counter(sect, decimal-leading-zero);
+  content: "§" counter(sect, decimal-leading-zero);
   font: 700 0.8em var(--mono);
   color: var(--green-dim);
   margin-right: 0.5rem;
@@ -664,7 +664,7 @@ figure.fig figcaption { font-size: 0.76rem; color: var(--ink-3); margin-top: 0.4
 }
 @media (max-width: 700px) {
   body::before {
-    content: "SAV-LAB // OSPF ADJ 2/2 FULL \u00b7 T-01\u2026T-07 \u00b7 CONFIGS v1.0";
+    content: "SAV-LAB // OSPF ADJ 2/2 FULL · T-01…T-07 · CONFIGS v1.0";
     font-size: 9.5px;
     padding-left: 30px;
   }
