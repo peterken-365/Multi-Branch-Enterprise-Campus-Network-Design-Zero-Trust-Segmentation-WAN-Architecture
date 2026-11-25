@@ -3,155 +3,193 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IP Plan — Savannah Logistics VLSM Addressing Architecture</title>
-<meta name="description" content="Full VLSM IP addressing architecture from 10.20.0.0/16 for the Savannah Logistics enterprise campus: VLAN subnets, gateways, DHCP scopes, server statics and reserved cloud blocks.">
+<title>IP Addressing Plan (VLSM) — Savannah Logistics Campus Network Lab</title>
+<meta name="description" content="Full VLSM addressing architecture from 10.20.0.0/16 for the Savannah Logistics campus network: VLAN subnets, gateways, server statics, DHCP scopes and reserved cloud blocks.">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
-<header class="site-header">
-  <div class="container header-inner">
-    <a class="brand" href="index.html">
-      <span class="brand-mark" aria-hidden="true">
-        <svg width="20" height="20" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M32 15 L15 40 M32 15 L49 40 M15 40 L49 40" stroke="#2bbd7f" stroke-width="4" stroke-linecap="round"/><circle cx="32" cy="15" r="7" fill="#3ddc97"/><circle cx="15" cy="40" r="7" fill="#f5b83d"/><circle cx="49" cy="40" r="7" fill="#f5b83d"/></svg>
-      </span>
-      <span class="brand-text">Savannah-Logistics<span class="brand-sub">Enterprise Network Blueprint</span></span>
+<div class="shell">
+  <aside class="sidebar" id="sidebar">
+    <a class="side-brand" href="index.html">
+      <svg width="22" height="22" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M32 15 L15 40 M32 15 L49 40 M15 40 L49 40" stroke="#0e7c4a" stroke-width="4" stroke-linecap="round"/><circle cx="32" cy="15" r="7" fill="#0e7c4a"/><circle cx="15" cy="40" r="7" fill="#8a5a00"/><circle cx="49" cy="40" r="7" fill="#8a5a00"/></svg>
+      <span><span class="t1">Savannah-Logistics</span><span class="t2">enterprise campus network lab</span></span>
     </a>
-    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="primary-nav"><span></span><span></span><span></span></button>
-    <nav class="site-nav" id="primary-nav" aria-label="Primary navigation">
+    <nav class="side-nav" aria-label="Primary navigation">
+      <p class="navlabel">Project</p>
       <a href="index.html">Overview</a>
-      <a href="topology.html">Topology</a>
-      <a href="ip-plan.html">IP Plan</a>
-      <a href="switching-routing.html">Design</a>
-      <a href="security.html">Security</a>
-      <a href="automation.html">Automation</a>
-      <a href="verification.html">Verification</a>
-      <a class="nav-gh" href="https://github.com/peterken-365/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture" target="_blank" rel="noopener">GitHub Repo</a>
+      <a href="topology.html">Topology &amp; devices</a>
+      <a href="ip-plan.html">IP plan <span class="n">VLSM</span></a>
+      <p class="navlabel">Design</p>
+      <a href="switching-routing.html">Switching &amp; routing</a>
+      <a href="security.html">Security policy</a>
+      <a href="automation.html">Automation &amp; cloud</a>
+      <p class="navlabel">Proof</p>
+      <a href="verification.html">Verification runbook</a>
+      <a href="lab.html">Lab console <span class="n">replay</span></a>
+      <p class="navlabel">Source</p>
+      <a href="https://github.com/peterken-365/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture" target="_blank" rel="noopener">GitHub repository</a>
+      <a href="05-verification-evidence/verification_report.md" target="_blank" rel="noopener">Runbook (.md)</a>
     </nav>
-  </div>
-</header>
-<main id="main">
-  <section class="page-hero">
-    <div class="container">
-      <p class="eyebrow">02 · Addressing</p>
-      <h1>VLSM IP Addressing Architecture</h1>
-      <p class="lead">Every segment is carved from the private block <span class="mono">10.20.0.0/16</span> by real demand — sized, documented, and reserved for structured growth. Convention: each VLAN owns the <span class="mono">10.20.&lt;VLAN-ID&gt;.0</span> block and carves the required prefix out of it.</p>
+    <div class="side-foot">
+      <p>CCNA 200-301 portfolio · peterken-365</p>
+      <p>Configs v1.0 · site rev. 2026-03-03</p>
     </div>
-  </section>
+  </aside>
+  <div class="content-col">
+    <div class="topbar">
+      <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="sidebar"><span></span><span></span><span></span></button>
+      <span class="topbar-title">IP addressing plan</span>
+      <a class="topbar-gh" href="https://github.com/peterken-365/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture" target="_blank" rel="noopener">GitHub</a>
+    </div>
+    <main id="main" class="docs">
+      <div class="page-head">
+        <p class="kicker">Reference · addressing</p>
+        <h1>IP addressing plan — VLSM from 10.20.0.0/16</h1>
+        <p class="lede">Every segment sized to real demand, not to one convenient mask. Convention: each VLAN owns the 10.20.&lt;VLAN-ID&gt;.0 block, so future growth is a re-masking exercise — no renumbering. Source of truth: <a href="01-topology-and-ip-plan/vlsm-ip-plan.md" target="_blank" rel="noopener">vlsm-ip-plan.md</a> (+ <a href="01-topology-and-ip-plan/vlsm-ip-plan.csv" target="_blank" rel="noopener">CSV export</a>).</p>
+      </div>
 
-  <section class="section">
-    <div class="container">
-      <h2 style="font-size:1.35rem;letter-spacing:-.01em">Master allocation table</h2>
+      <h2>Master allocation table</h2>
       <div class="table-wrap">
         <table>
-          <thead>
-            <tr><th>Segment</th><th>VLAN</th><th>Subnet</th><th>Usable</th><th>Gateway</th><th>Used by</th></tr>
-          </thead>
+          <thead><tr><th>Segment</th><th>VLAN</th><th>Subnet</th><th>Usable</th><th>Gateway</th><th>Used by</th></tr></thead>
           <tbody>
-            <tr><td><strong>IT Admin &amp; Helpdesk</strong></td><td class="mono">10</td><td class="mono">10.20.10.0/26</td><td>62</td><td class="mono">10.20.10.1</td><td>IT staff, helpdesk, admin workstations (MLS SVI 10)</td></tr>
-            <tr><td><strong>Finance &amp; HR</strong></td><td class="mono">20</td><td class="mono">10.20.20.0/25</td><td>126</td><td class="mono">10.20.20.1</td><td>Finance/HR staff — payroll systems (MLS SVI 20)</td></tr>
-            <tr><td><strong>Internal Servers / DMZ</strong></td><td class="mono">30</td><td class="mono">10.20.30.0/27</td><td>30</td><td class="mono">10.20.30.1</td><td>Central service farm — static IPs only (MLS SVI 30)</td></tr>
-            <tr><td><strong>Guest &amp; BYOD Wi-Fi</strong></td><td class="mono">40</td><td class="mono">10.20.40.0/24</td><td>254</td><td class="mono">10.20.40.1</td><td>Guest Wi-Fi + wired guest ports (MLS SVI 40)</td></tr>
-            <tr><td><strong>Mombasa Operations</strong></td><td class="mono">50</td><td class="mono">10.20.50.0/25</td><td>126</td><td class="mono">10.20.50.1</td><td>Branch staff (R2 Gi0/1.50)</td></tr>
-            <tr><td><strong>Net Mgmt — HQ</strong></td><td class="mono">99</td><td class="mono">10.20.99.0/28</td><td>14</td><td class="mono">10.20.99.1</td><td>MLS .1 · SW1 .2 · SW2 .3</td></tr>
-            <tr><td><strong>Net Mgmt — Branch</strong></td><td class="mono">99</td><td class="mono">10.20.99.16/28</td><td>14</td><td class="mono">10.20.99.17</td><td>R2 sub-if .17 · SW3 .18</td></tr>
-            <tr><td><strong>Quarantine / Parking</strong></td><td class="mono">999</td><td class="mono">unrouted</td><td>0</td><td>none</td><td>Unused ports shutdown + native VLAN on trunks</td></tr>
-            <tr><td><strong>HQ–Branch WAN</strong></td><td class="mono">Link A</td><td class="mono">10.20.254.0/30</td><td>2</td><td class="mono">R1 .1 / R2 .2</td><td>Point-to-point OSPF transit</td></tr>
-            <tr><td><strong>Core–Edge transit</strong></td><td class="mono">Link B</td><td class="mono">10.20.254.4/30</td><td>2</td><td class="mono">R1 .5 / MLS .6</td><td>Point-to-point OSPF transit</td></tr>
-            <tr><td><strong>Router loopbacks</strong></td><td class="mono">infra</td><td class="mono">10.20.255.0/24</td><td>/32s</td><td>—</td><td>R1 = 10.20.255.1 · R2 = 10.20.255.2 (SSH + NTP source + OSPF RID)</td></tr>
+            <tr><td>IT Admin &amp; Helpdesk</td><td class="td-mono">10</td><td class="td-mono">10.20.10.0/26</td><td>62</td><td class="td-mono">10.20.10.1 (MLS SVI10)</td><td>IT staff, helpdesk, admin workstations</td></tr>
+            <tr><td>Finance &amp; HR</td><td class="td-mono">20</td><td class="td-mono">10.20.20.0/25</td><td>126</td><td class="td-mono">10.20.20.1 (MLS SVI20)</td><td>Finance/HR staff, payroll systems</td></tr>
+            <tr><td>Internal Servers</td><td class="td-mono">30</td><td class="td-mono">10.20.30.0/27</td><td>30</td><td class="td-mono">10.20.30.1 (MLS SVI30)</td><td>Central service farm — static IPs only</td></tr>
+            <tr><td>Guest &amp; BYOD</td><td class="td-mono">40</td><td class="td-mono">10.20.40.0/24</td><td>254</td><td class="td-mono">10.20.40.1 (MLS SVI40)</td><td>Guest Wi-Fi + wired guest ports</td></tr>
+            <tr><td>Mombasa Operations</td><td class="td-mono">50</td><td class="td-mono">10.20.50.0/25</td><td>126</td><td class="td-mono">10.20.50.1 (R2 Gi0/1.50)</td><td>Branch staff</td></tr>
+            <tr><td>Net Mgmt — HQ</td><td class="td-mono">99</td><td class="td-mono">10.20.99.0/28</td><td>14</td><td class="td-mono">10.20.99.1 (MLS SVI99)</td><td>MLS .1 · SW1 .2 · SW2 .3</td></tr>
+            <tr><td>Net Mgmt — Branch</td><td class="td-mono">99</td><td class="td-mono">10.20.99.16/28</td><td>14</td><td class="td-mono">10.20.99.17 (R2 Gi0/1.99)</td><td>SW3 .18</td></tr>
+            <tr><td>Quarantine</td><td class="td-mono">999</td><td class="td-mono">unrouted</td><td>0</td><td class="td-mono">none</td><td>Unused ports + hardened native VLAN</td></tr>
+            <tr><td>HQ–Branch WAN (Link A)</td><td class="td-mono">—</td><td class="td-mono">10.20.254.0/30</td><td>2</td><td class="td-mono">R1 .1 / R2 .2</td><td>OSPF transit</td></tr>
+            <tr><td>Core–Edge transit (Link B)</td><td class="td-mono">—</td><td class="td-mono">10.20.254.4/30</td><td>2</td><td class="td-mono">R1 .5 / MLS .6</td><td>OSPF transit</td></tr>
+            <tr><td>Router loopbacks</td><td class="td-mono">—</td><td class="td-mono">10.20.255.0/24</td><td>/32s</td><td class="td-mono">—</td><td>R1 = 10.20.255.1 · R2 = 10.20.255.2</td></tr>
+            <tr><td>Azure S2S VPN (reserved)</td><td class="td-mono">—</td><td class="td-mono">10.20.200.0/24</td><td>254</td><td class="td-mono">Project 5</td><td>Ring-fenced for Azure VNet mapping</td></tr>
+            <tr><td>VPN tunnel transit (reserved)</td><td class="td-mono">—</td><td class="td-mono">10.20.254.8/30</td><td>2</td><td class="td-mono">10.20.254.9 (R1 Tunnel0)</td><td>IPsec S2S tunnel interface</td></tr>
+            <tr><td>ISP public edge</td><td class="td-mono">—</td><td class="td-mono">203.0.113.0/30</td><td>2</td><td class="td-mono">R1 .2</td><td>RFC 5737 lab range — swap for a real ISP assignment</td></tr>
+            <tr><td>Internet web (lab)</td><td class="td-mono">—</td><td class="td-mono">198.51.100.10/32</td><td>—</td><td class="td-mono">—</td><td>External target for the NAT test (T-03)</td></tr>
           </tbody>
         </table>
       </div>
 
       <div class="callout">
-        <strong>Why VLAN 99 is split per site:</strong> a Layer-2 VLAN cannot span the routed WAN. Keeping one /27 stretched across HQ and the branch would create a discontiguous subnet advertised from two OSPF routers (broken longest-match). The /28 site-split preserves the documented /27 super-block while every routed boundary stays clean.
+        <p><span class="ttl">Why VLAN 99 is split per site.</span> A Layer-2 VLAN cannot span the routed WAN. Keeping one /27 stretched across HQ and the branch would create a discontiguous subnet advertised from two OSPF routers (broken longest-match). The /28 site-split preserves the documented /27 super-block while every routed boundary stays clean.</p>
       </div>
 
-      <h2 style="font-size:1.35rem;letter-spacing:-.01em;margin-top:2rem">Server static assignments (VLAN 30)</h2>
+      <h2>Server static assignments (VLAN 30)</h2>
       <div class="table-wrap">
         <table>
-          <thead>
-            <tr><th>Server</th><th>IP</th><th>Service</th><th>Notes</th></tr>
-          </thead>
+          <thead><tr><th>Server</th><th>IP</th><th>Service</th><th>Notes</th></tr></thead>
           <tbody>
-            <tr><td><strong>SVL-DC01</strong></td><td class="mono">10.20.30.10</td><td>Central DHCP</td><td>One server scopes ALL user VLANs; relay agents point here</td></tr>
-            <tr><td><strong>SVL-NTPLOG01</strong></td><td class="mono">10.20.30.11</td><td>NTP + Syslog</td><td>Single time/audit source for every device</td></tr>
-            <tr><td><strong>SVL-DNS01</strong></td><td class="mono">10.20.30.12</td><td>DNS</td><td>Internal records; forwards upstream for Internet names</td></tr>
-            <tr><td><strong>SVL-APP01</strong></td><td class="mono">10.20.30.20</td><td>HTTP/HTTPS app</td><td>Finance + branch reachability target for T-01 / T-04</td></tr>
+            <tr><td class="td-mono">SVL-DC01</td><td class="td-mono">10.20.30.10</td><td>Central DHCP</td><td>One server scopes ALL user VLANs — relays point here</td></tr>
+            <tr><td class="td-mono">SVL-NTPLOG01</td><td class="td-mono">10.20.30.11</td><td>NTP + Syslog</td><td>Single time/audit source for every device</td></tr>
+            <tr><td class="td-mono">SVL-DNS01</td><td class="td-mono">10.20.30.12</td><td>DNS</td><td>Internal records; forwards upstream for Internet names</td></tr>
+            <tr><td class="td-mono">SVL-APP01</td><td class="td-mono">10.20.30.20</td><td>HTTP/HTTPS app</td><td>Finance + branch target for T-01 / T-04</td></tr>
           </tbody>
         </table>
       </div>
 
-      <h2 style="font-size:1.35rem;letter-spacing:-.01em;margin-top:2rem">Central DHCP scope plan (server 10.20.30.10)</h2>
+      <h2>Central DHCP scope plan (server 10.20.30.10)</h2>
       <div class="table-wrap">
         <table>
-          <thead>
-            <tr><th>Scope</th><th>Network</th><th>Gateway</th><th>DNS</th><th>Dynamic range</th><th>Excluded</th></tr>
-          </thead>
+          <thead><tr><th>Scope</th><th>Network</th><th>Gateway</th><th>DNS</th><th>Dynamic range</th><th>Excluded</th></tr></thead>
           <tbody>
-            <tr><td><strong>VLAN10-IT</strong></td><td class="mono">10.20.10.0/26</td><td class="mono">10.20.10.1</td><td class="mono">10.20.30.12</td><td class="mono">.6 – .62</td><td class="mono">.1 – .5</td></tr>
-            <tr><td><strong>VLAN20-FIN</strong></td><td class="mono">10.20.20.0/25</td><td class="mono">10.20.20.1</td><td class="mono">10.20.30.12</td><td class="mono">.6 – .126</td><td class="mono">.1 – .5</td></tr>
-            <tr><td><strong>VLAN40-GUEST</strong></td><td class="mono">10.20.40.0/24</td><td class="mono">10.20.40.1</td><td class="mono">10.20.30.12</td><td class="mono">.100 – .249</td><td class="mono">.1 – .99</td></tr>
-            <tr><td><strong>VLAN50-BRANCH</strong></td><td class="mono">10.20.50.0/25</td><td class="mono">10.20.50.1</td><td class="mono">10.20.30.12</td><td class="mono">.50 – .200</td><td class="mono">.1 – .49</td></tr>
+            <tr><td class="td-mono">VLAN10-IT</td><td class="td-mono">10.20.10.0/26</td><td class="td-mono">10.20.10.1</td><td class="td-mono">10.20.30.12</td><td class="td-mono">.6 – .62</td><td>.1 – .5 (gateway + statics)</td></tr>
+            <tr><td class="td-mono">VLAN20-FIN</td><td class="td-mono">10.20.20.0/25</td><td class="td-mono">10.20.20.1</td><td class="td-mono">10.20.30.12</td><td class="td-mono">.6 – .126</td><td>.1 – .5</td></tr>
+            <tr><td class="td-mono">VLAN40-GUEST</td><td class="td-mono">10.20.40.0/24</td><td class="td-mono">10.20.40.1</td><td class="td-mono">10.20.30.12</td><td class="td-mono">.100 – .249</td><td>.1 – .99 (expansion)</td></tr>
+            <tr><td class="td-mono">VLAN50-BRANCH</td><td class="td-mono">10.20.50.0/25</td><td class="td-mono">10.20.50.1</td><td class="td-mono">10.20.30.12</td><td class="td-mono">.50 – .200</td><td>.1 – .49</td></tr>
           </tbody>
         </table>
       </div>
-      <div class="callout callout-amber">
-        <strong>Relay agents</strong> (<span class="mono">ip helper-address 10.20.30.10</span>): MLS SVI 10/20/40 and R2 Gi0/1.50. Switch management SVIs and all server IPs are <strong>static by policy</strong> — DHCP is never used on the management plane.
+      <pre class="code">! Relay agents — one central server, four user VLANs:
+!
+! MLS-HQ-CORE                       R2-MOMBASA-EDGE
+interface Vlan10                   interface GigabitEthernet0/1.50
+ ip helper-address 10.20.30.10      ip helper-address 10.20.30.10
+interface Vlan20
+ ip helper-address 10.20.30.10
+interface Vlan40
+ ip helper-address 10.20.30.10
+!
+! Switch management SVIs and all server IPs are STATIC BY POLICY —
+! DHCP is never used on the management plane.</pre>
+
+      <h2>Console evidence — the plan as deployed</h2>
+      <span class="cli-label">recorded · MLS-HQ-CORE# show ip interface brief</span>
+      <pre class="cli"><span class="p">MLS-HQ-CORE#</span> show ip interface brief
+Interface              IP-Address      OK? Method Status                Protocol
+GigabitEthernet1/0/1   unassigned      YES unset  up                    up
+GigabitEthernet1/0/2   unassigned      YES unset  up                    up
+GigabitEthernet1/0/3   unassigned      YES unset  administratively down down
+GigabitEthernet1/0/4   unassigned      YES unset  administratively down down
+GigabitEthernet1/0/5   unassigned      YES unset  administratively down down
+GigabitEthernet1/0/6   unassigned      YES unset  administratively down down
+GigabitEthernet1/0/7   unassigned      YES unset  administratively down down
+GigabitEthernet1/0/8   unassigned      YES unset  administratively down down
+GigabitEthernet1/0/9   unassigned      YES unset  administratively down down
+GigabitEthernet1/0/10  unassigned      YES unset  administratively down down
+GigabitEthernet1/0/11  unassigned      YES unset  administratively down down
+GigabitEthernet1/0/12  unassigned      YES unset  administratively down down
+GigabitEthernet1/0/13  unassigned      YES unset  administratively down down
+GigabitEthernet1/0/14  unassigned      YES unset  administratively down down
+GigabitEthernet1/0/15  unassigned      YES unset  administratively down down
+GigabitEthernet1/0/16  unassigned      YES unset  administratively down down
+GigabitEthernet1/0/17  unassigned      YES unset  administratively down down
+GigabitEthernet1/0/18  unassigned      YES unset  administratively down down
+GigabitEthernet1/0/19  unassigned      YES unset  administratively down down
+GigabitEthernet1/0/20  unassigned      YES unset  administratively down down
+GigabitEthernet1/0/21  unassigned      YES unset  administratively down down
+GigabitEthernet1/0/22  unassigned      YES unset  administratively down down
+GigabitEthernet1/0/23  unassigned      YES unset  administratively down down
+GigabitEthernet1/0/24  unassigned      YES unset  administratively down down
+GigabitEthernet1/1/1   10.20.254.6     YES manual up                    up
+GigabitEthernet1/1/2   unassigned      YES unset  administratively down down
+GigabitEthernet1/1/3   unassigned      YES unset  administratively down down
+GigabitEthernet1/1/4   unassigned      YES unset  administratively down down
+Vlan10                 10.20.10.1      YES manual up                    up
+Vlan20                 10.20.20.1      YES manual up                    up
+Vlan30                 10.20.30.1      YES manual up                    up
+Vlan40                 10.20.40.1      YES manual up                    up
+Vlan99                 10.20.99.1      YES manual up                    up</pre>
+      <span class="cli-label">recorded · R2-MOMBASA-EDGE# show ip interface brief</span>
+      <pre class="cli"><span class="p">R2-MOMBASA-EDGE#</span> show ip interface brief
+Interface              IP-Address      OK? Method Status                Protocol
+GigabitEthernet0/0     10.20.254.2     YES manual up                    up
+GigabitEthernet0/1     unassigned      YES unset  up                    up
+GigabitEthernet0/1.50  10.20.50.1      YES manual up                    up
+GigabitEthernet0/1.99  10.20.99.17     YES manual up                    up
+Loopback0              10.20.255.2     YES manual up                    up
+Vlan1                  unassigned      YES unset  administratively down down</pre>
+
+      <h2>Growth headroom (deliberate, structured)</h2>
+      <ul class="note-list">
+        <li><b>VLAN 20 (Finance):</b> /25 today; the full 10.20.20.0/24 block is unused outside it — growth = re-mask the SVI + widen the scope. No renumbering.</li>
+        <li><b>VLAN 10 (IT):</b> /26 today; /25 or /24 available in the same block.</li>
+        <li><b>VLAN 40 (Guest):</b> dynamic pool starts at .100 so the lower half absorbs admin/appliance statics without disturbing leases.</li>
+        <li><b>Branch:</b> VLAN 50 can grow to /24 within 10.20.50.0/24.</li>
+        <li><b>Site replication:</b> the <code>10.20.&lt;VLAN&gt;.0</code> convention leaves room for a future second branch (e.g., Kisumu) to reuse VLAN IDs with new site octets.</li>
+        <li><b>Cloud:</b> 10.20.200.0/24 and 10.20.254.8/30 are ring-fenced NOW so the Azure S2S project needs zero re-IP. See <a href="automation.html">automation &amp; cloud</a>.</li>
+      </ul>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p class="f-title">Savannah Logistics Ltd. — multi-branch enterprise campus network</p>
+        <nav aria-label="Footer navigation">
+          <a href="index.html">Overview</a>
+          <a href="lab.html">Lab console</a>
+          <a href="verification.html">Verification</a>
+          <a href="https://github.com/peterken-365/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture" target="_blank" rel="noopener">Repository</a>
+        </nav>
       </div>
-
-      <h2 style="font-size:1.35rem;letter-spacing:-.01em;margin-top:2rem">Reserved &amp; external blocks</h2>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr><th>Block</th><th>Subnet</th><th>Purpose</th></tr>
-          </thead>
-          <tbody>
-            <tr><td><strong>Azure S2S VPN</strong> (reserved)</td><td class="mono">10.20.200.0/24</td><td>Ring-fenced for the Project 5 Azure VNet — zero re-IP effort when the hybrid extension begins</td></tr>
-            <tr><td><strong>VPN tunnel transit</strong> (reserved)</td><td class="mono">10.20.254.8/30</td><td>R1 Tunnel0 = 10.20.254.9 — IPsec S2S tunnel interface</td></tr>
-            <tr><td><strong>ISP public edge</strong></td><td class="mono">203.0.113.0/30</td><td>R1 .2 / ISP .1 — documentation range (RFC 5737); swap for the real ISP assignment in production</td></tr>
-            <tr><td><strong>Simulated Internet web</strong></td><td class="mono">198.51.100.10</td><td>External target for the NAT/PAT test T-03</td></tr>
-          </tbody>
-        </table>
+      <div class="footer-base">
+        <p>© <span data-year>2026</span> peterken-365 · Junior Network &amp; Security Architect portfolio · CCNA 200-301.</p>
+        <p>Configs are lab/design values — rotate credentials before production deployment.</p>
       </div>
-
-      <h2 style="font-size:1.35rem;letter-spacing:-.01em;margin-top:2rem">Growth headroom (deliberate, structured)</h2>
-      <ol class="note-list">
-        <li><strong>VLAN 20 (Finance):</strong> currently /25 (126 hosts). The full 10.20.20.0/24 block is unused outside this /25, so growth = re-mask the SVI + widen the DHCP scope. No renumbering.</li>
-        <li><strong>VLAN 10 (IT):</strong> /26 today, /25 or /24 available in the same block.</li>
-        <li><strong>VLAN 40 (Guest):</strong> the dynamic pool starts at .100 so the lower half absorbs admin/appliance statics without disturbing leases.</li>
-        <li><strong>Branch:</strong> VLAN 50 can grow to /24 within 10.20.50.0/24.</li>
-        <li><strong>Site replication:</strong> the 10.20.&lt;VLAN&gt;.0 convention leaves room for a future second branch (e.g., Kisumu) to reuse VLAN IDs with new site octets instead of redesigning the plan.</li>
-        <li><strong>Cloud:</strong> 10.20.200.0/24 and 10.20.254.8/30 are ring-fenced now so the Azure S2S VPN needs zero re-addressing later.</li>
-      </ol>
-
-      <p style="margin-top:1.6rem"><a class="card-link" href="https://github.com/peterken-365/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture/blob/main/01-topology-and-ip-plan/vlsm-ip-plan.md" target="_blank" rel="noopener">Read the full VLSM plan on GitHub →</a> &nbsp;·&nbsp; <a class="card-link" href="01-topology-and-ip-plan/vlsm-ip-plan.csv">Download the CSV version</a></p>
-    </div>
-  </section>
-</main>
-<footer class="site-footer">
-  <div class="container footer-inner">
-    <div class="footer-brand">
-      <p class="f-title">Savannah Logistics Ltd. — Multi-Branch Enterprise Campus Network</p>
-      <p class="f-sub">Zero-Trust Segmentation &amp; WAN Architecture · CCNA 200-301 aligned · Nairobi HQ + Mombasa Branch · Designed and documented by peterken-365</p>
-    </div>
-    <nav class="footer-nav" aria-label="Footer navigation">
-      <a href="index.html">Overview</a>
-      <a href="topology.html">Topology</a>
-      <a href="ip-plan.html">IP Plan</a>
-      <a href="switching-routing.html">Design</a>
-      <a href="security.html">Security</a>
-      <a href="automation.html">Automation</a>
-      <a href="verification.html">Verification</a>
-      <a href="https://github.com/peterken-365/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture" target="_blank" rel="noopener">Repository</a>
-    </nav>
+    </footer>
   </div>
-  <div class="container footer-base">
-    <p>© <span id="year">2026</span> peterken-365 — Junior Network &amp; Security Architect portfolio project.</p>
-    <p>Configs are lab/design values — rotate credentials before production deployment.</p>
-  </div>
-</footer>
+</div>
 <script src="script.js"></script>
 </body>
 </html>

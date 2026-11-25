@@ -3,224 +3,171 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Savannah Logistics Ltd. — Multi-Branch Enterprise Campus Network Design</title>
-<meta name="description" content="Production-grade CCNA 200-301 design package: multi-branch enterprise campus network with zero-trust segmentation, VLSM, OSPF Area 0 and WAN architecture for Savannah Logistics Ltd. (Nairobi HQ + Mombasa Branch).">
+<title>Savannah Logistics Ltd. — Multi-Branch Enterprise Campus Network Lab</title>
+<meta name="description" content="Buildable CCNA 200-301 lab: multi-branch campus network for Savannah Logistics Ltd. (Nairobi HQ + Mombasa branch) with zero-trust segmentation, OSPF Area 0 WAN, NAT/PAT and a 7-test verification runbook. Reproduce it in Packet Tracer 8.2+ in under an hour.">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
-<header class="site-header">
-  <div class="container header-inner">
-    <a class="brand" href="index.html">
-      <span class="brand-mark" aria-hidden="true">
-        <svg width="20" height="20" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M32 15 L15 40 M32 15 L49 40 M15 40 L49 40" stroke="#2bbd7f" stroke-width="4" stroke-linecap="round"/><circle cx="32" cy="15" r="7" fill="#3ddc97"/><circle cx="15" cy="40" r="7" fill="#f5b83d"/><circle cx="49" cy="40" r="7" fill="#f5b83d"/></svg>
-      </span>
-      <span class="brand-text">Savannah-Logistics<span class="brand-sub">Enterprise Network Blueprint</span></span>
+<div class="shell">
+  <aside class="sidebar" id="sidebar">
+    <a class="side-brand" href="index.html">
+      <svg width="22" height="22" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M32 15 L15 40 M32 15 L49 40 M15 40 L49 40" stroke="#0e7c4a" stroke-width="4" stroke-linecap="round"/><circle cx="32" cy="15" r="7" fill="#0e7c4a"/><circle cx="15" cy="40" r="7" fill="#8a5a00"/><circle cx="49" cy="40" r="7" fill="#8a5a00"/></svg>
+      <span><span class="t1">Savannah-Logistics</span><span class="t2">enterprise campus network lab</span></span>
     </a>
-    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="primary-nav"><span></span><span></span><span></span></button>
-    <nav class="site-nav" id="primary-nav" aria-label="Primary navigation">
+    <nav class="side-nav" aria-label="Primary navigation">
+      <p class="navlabel">Project</p>
       <a href="index.html">Overview</a>
-      <a href="topology.html">Topology</a>
-      <a href="ip-plan.html">IP Plan</a>
-      <a href="switching-routing.html">Design</a>
-      <a href="security.html">Security</a>
-      <a href="automation.html">Automation</a>
-      <a href="verification.html">Verification</a>
-      <a class="nav-gh" href="https://github.com/peterken-365/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture" target="_blank" rel="noopener">GitHub Repo</a>
+      <a href="topology.html">Topology &amp; devices</a>
+      <a href="ip-plan.html">IP plan <span class="n">VLSM</span></a>
+      <p class="navlabel">Design</p>
+      <a href="switching-routing.html">Switching &amp; routing</a>
+      <a href="security.html">Security policy</a>
+      <a href="automation.html">Automation &amp; cloud</a>
+      <p class="navlabel">Proof</p>
+      <a href="verification.html">Verification runbook</a>
+      <a href="lab.html">Lab console <span class="n">replay</span></a>
+      <p class="navlabel">Source</p>
+      <a href="https://github.com/peterken-365/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture" target="_blank" rel="noopener">GitHub repository</a>
+      <a href="05-verification-evidence/verification_report.md" target="_blank" rel="noopener">Runbook (.md)</a>
     </nav>
-  </div>
-</header>
-<main id="main">
-  <section class="hero">
-    <div class="container">
-      <p class="hero-badge">CCNA 200-301 · Architectural Blueprint #2</p>
-      <h1>Multi-Branch Enterprise Campus Network Design <span class="grad">Zero-Trust Segmentation &amp; WAN Architecture</span></h1>
-      <p class="lead">A complete, production-grade network architecture for <strong>Savannah Logistics Ltd.</strong> — the Nairobi headquarters and the Mombasa regional branch — engineered out of a flat, single-broadcast-domain office network. Every artefact in this repository is real Cisco IOS configuration: paste-ready for Packet Tracer 8.2+ and deployable on physical Catalyst and ISR hardware.</p>
-      <div class="hero-cta">
-        <a class="btn btn-primary" href="topology.html">Explore the topology</a>
-        <a class="btn btn-ghost" href="switching-routing.html">Device configurations</a>
-        <a class="btn btn-ghost" href="verification.html">Verification runbook</a>
-      </div>
-      <div class="stat-grid">
-        <div class="stat"><b>7</b><span>Segmented VLANs</span></div>
-        <div class="stat"><b>2</b><span>Sites · one OSPF domain</span></div>
-        <div class="stat"><b>3</b><span>OSPFv2 routers</span></div>
-        <div class="stat"><b>6</b><span>Golden device configs</span></div>
-        <div class="stat"><b>7</b><span>Verification tests</span></div>
-        <div class="stat"><b>4</b><span>CCNA pillars mapped</span></div>
-      </div>
+    <div class="side-foot">
+      <p>CCNA 200-301 portfolio · peterken-365</p>
+      <p>Configs v1.0 · site rev. 2026-03-03</p>
     </div>
-  </section>
-
-  <section class="section">
-    <div class="container">
-      <div class="section-head">
-        <p class="eyebrow">01 · The business problem</p>
-        <h2>From a flat office LAN to an engineered campus network</h2>
-        <p>Savannah Logistics outgrew its single flat office router. The legacy network concentrated every employee, guest phone and server into one broadcast domain — with no redundancy, no encrypted management, no central time or logging, and no structured IP plan.</p>
-      </div>
-      <div class="grid grid-2">
-        <article class="card">
-          <span class="card-chip">Legacy risk 01</span>
-          <h3>One flat broadcast domain</h3>
-          <p>Guest phones, finance workstations and payroll servers all shared VLAN 1 — one infected device could scan the entire business. <strong>Fix:</strong> seven VLANs with a zero-trust extended ACL policy enforced at every gateway.</p>
-        </article>
-        <article class="card">
-          <span class="card-chip">Legacy risk 02</span>
-          <h3>No loop-free redundancy</h3>
-          <p>Default STP with no root planning — a single link event could silence the office. <strong>Fix:</strong> Rapid PVST+ with the multilayer core explicitly pinned as Root Bridge, PortFast and BPDU Guard on every edge port.</p>
-        </article>
-        <article class="card">
-          <span class="card-chip">Legacy risk 03</span>
-          <h3>Unprotected management plane</h3>
-          <p>Telnet and HTTP management with no central time or logging — sessions unencrypted, logs untrustworthy. <strong>Fix:</strong> SSHv2-only VTY bound to the IT VLAN, with NTP + Syslog centralized at 10.20.30.11.</p>
-        </article>
-        <article class="card">
-          <span class="card-chip">Legacy risk 04</span>
-          <h3>No addressing discipline</h3>
-          <p>Oversized subnets, wasted space, no growth path and no cloud headroom. <strong>Fix:</strong> a full VLSM architecture from 10.20.0.0/16 sized to real demand, with reserved blocks for the Azure S2S VPN extension.</p>
-        </article>
-      </div>
+  </aside>
+  <div class="content-col">
+    <div class="topbar">
+      <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="sidebar"><span></span><span></span><span></span></button>
+      <span class="topbar-title">Savannah-Logistics network lab</span>
+      <a class="topbar-gh" href="https://github.com/peterken-365/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture" target="_blank" rel="noopener">GitHub</a>
     </div>
-  </section>
+    <main id="main" class="docs">
+      <div class="page-head">
+        <p class="kicker">Lab documentation · CCNA 200-301 portfolio</p>
+        <h1>Savannah Logistics Ltd. — multi-branch enterprise campus network</h1>
+        <p class="lede">Nairobi HQ and the Mombasa branch on six Cisco devices in one OSPF domain. This site is the lab notebook: build files, device configs, policy tables, and the recorded CLI evidence behind every claim. Everything can be reproduced in Packet Tracer 8.2+ in under an hour.</p>
+      </div>
 
-  <section class="section section-alt">
-    <div class="container">
-      <div class="section-head">
-        <p class="eyebrow">02 · Four architectural pillars</p>
-        <h2>Mapped to all four CCNA 200-301 courses</h2>
-        <p>Every requirement of the certification track is implemented here as deployable configuration — not summarized as theory.</p>
-      </div>
-      <div class="grid grid-4">
-        <article class="card">
-          <span class="card-chip">Course 1 · Foundations</span>
-          <h3>IOS Essentials &amp; Management-Plane Security</h3>
-          <p>SSHv2-only VTY, Telnet disabled, HTTP/HTTPS management off, VTY access-class restricted to VLAN 10, encrypted secrets, login block-for, legal banner, console protection, exec-timeouts.</p>
-          <a class="card-link" href="security.html">Security standard →</a>
-        </article>
-        <article class="card">
-          <span class="card-chip">Course 2 · Intermediate</span>
-          <h3>Switching, VLANs &amp; Dynamic Routing</h3>
-          <p>Rapid PVST+ with an explicit Root Bridge, PortFast + BPDU Guard, hardened native VLAN 999 with nonegotiate, VLAN 1 eliminated, quarantine VLAN 999 for unused ports, OSPFv2 Area 0 with passive-interface default.</p>
-          <a class="card-link" href="switching-routing.html">Design details →</a>
-        </article>
-        <article class="card">
-          <span class="card-chip">Course 3 · Advanced</span>
-          <h3>WAN, Services &amp; Micro-Segmentation</h3>
-          <p>Port Security, DHCP Snooping, Dynamic ARP Inspection; the extended ACL matrix (guest hard-isolation, Finance app-ports-only, Branch→Finance deny, IT→Mgmt SSH-only); central DHCP with relay agents, NAT/PAT overload, NTP + Syslog.</p>
-          <a class="card-link" href="security.html">ACL matrix →</a>
-        </article>
-        <article class="card">
-          <span class="card-chip">Course 4 · Expert</span>
-          <h3>Automation &amp; Cloud-Readiness</h3>
-          <p>Golden-config source of truth, backup and drift-check scripts, Ansible inventory, an SDN plane model with RESTCONF/JSON examples, reserved Azure S2S VPN blocks and an IOS-XE IKEv2 tunnel template.</p>
-          <a class="card-link" href="automation.html">Automation brief →</a>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="container">
-      <div class="section-head">
-        <p class="eyebrow">03 · Zero-trust traffic policy</p>
-        <h2>Nothing moves unless a gateway permits it</h2>
-        <p>Denies are logged, so ACL hit counters and the central Syslog server provide both verification evidence and an audit trail. The full matrix with ACL-to-interface bindings is on the security page.</p>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr><th>Source → Destination</th><th>Verdict</th><th>Enforced at</th></tr>
-          </thead>
-          <tbody>
-            <tr><td><strong>Guest (VLAN 40)</strong> → Internet</td><td><span class="pill pill-permit">PERMIT</span> DNS · HTTP · HTTPS only</td><td class="mono">MLS SVI40 · GUEST-IN</td></tr>
-            <tr><td><strong>Guest (VLAN 40)</strong> → any internal VLAN</td><td><span class="pill pill-deny">DENY ALL</span> logged</td><td class="mono">MLS SVI40 · GUEST-IN</td></tr>
-            <tr><td><strong>Finance (VLAN 20)</strong> → Servers (VLAN 30)</td><td><span class="pill pill-permit">PERMIT</span> app ports only (80/443/1433) + DNS</td><td class="mono">MLS SVI20 · FINANCE-IN</td></tr>
-            <tr><td><strong>Branch (VLAN 50)</strong> → Finance (VLAN 20)</td><td><span class="pill pill-deny">DENY</span> logged — explicit business rule</td><td class="mono">R2 Gi0/1.50 · BRANCH-IN</td></tr>
-            <tr><td><strong>Branch (VLAN 50)</strong> → other internal VLANs</td><td><span class="pill pill-deny">DENY</span> logged — servers + Internet only</td><td class="mono">R2 Gi0/1.50 · BRANCH-IN</td></tr>
-            <tr><td><strong>IT Admin (VLAN 10)</strong> → Management (VLAN 99)</td><td><span class="pill pill-permit">PERMIT</span> SSH / management only</td><td class="mono">MLS SVI99 · MGMT-PLANE + VTY ACL</td></tr>
-            <tr><td><strong>Internet</strong> → Perimeter (R1)</td><td><span class="pill pill-amber">FILTER</span> established TCP · DNS/ICMP replies only</td><td class="mono">R1 Gi0/0 · EDGE-INBOUND</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p><a class="card-link" href="security.html">See the full ACL matrix and listings →</a></p>
-    </div>
-  </section>
-
-  <section class="section section-alt">
-    <div class="container">
-      <div class="section-head">
-        <p class="eyebrow">04 · Proof, not promises</p>
-        <h2>Seven tests, one pass bar</h2>
-        <p>The runbook in <span class="mono">05-verification-evidence/</span> specifies exact commands and expected outputs for each test, with a screenshot checklist for evidence capture.</p>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr><th>Test</th><th>Scenario</th><th>Expected architectural result</th></tr>
-          </thead>
-          <tbody>
-            <tr><td class="mono"><strong>T-01</strong></td><td>Finance PC (VLAN 20) → HQ Server (VLAN 30)</td><td>Routes via core MLS; ping/HTTP succeed under the FINANCE-IN app-port policy</td></tr>
-            <tr><td class="mono"><strong>T-02</strong></td><td>Guest (VLAN 40) → Finance / Servers</td><td>Dropped immediately by the extended ACL at the guest gateway — logged</td></tr>
-            <tr><td class="mono"><strong>T-03</strong></td><td>Guest (VLAN 40) → external Internet web</td><td>Succeeds via edge NAT/PAT overload; ICMP to the Internet stays denied</td></tr>
-            <tr><td class="mono"><strong>T-04</strong></td><td>Branch (VLAN 50) → HQ App Server (VLAN 30)</td><td>Routes dynamically across the WAN via OSPF Area 0</td></tr>
-            <tr><td class="mono"><strong>T-05</strong></td><td>Rogue device / rogue BPDU on an access port</td><td>Port Security / BPDU Guard err-disables the port</td></tr>
-            <tr><td class="mono"><strong>T-06</strong></td><td>Unprivileged SSH from Guest VLAN 40</td><td>Rejected by gateway ACL + management VTY ACL (double enforcement)</td></tr>
-            <tr><td class="mono"><strong>T-07</strong></td><td>VLAN 20 PC boots without a static IP</td><td>Correct 10.20.20.x lease via the central DHCP relay</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p><a class="card-link" href="verification.html">Open the verification runbook →</a></p>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="container">
-      <div class="section-head">
-        <p class="eyebrow">05 · Repository map</p>
-        <h2>Every artefact, versioned and cross-linked</h2>
-        <p>This website <strong>is</strong> the repository — the pages, diagrams and configurations you are reading are served straight from the main branch.</p>
-      </div>
-      <div class="filetree" aria-label="Repository structure">
-<b>Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture/</b>
-├── <a href="01-topology-and-ip-plan/topology.md">01-topology-and-ip-plan/</a>          topology inventory · VLSM plan (MD + CSV) · Packet Tracer build guide
-├── <a href="02-switching-and-routing-design/l2-switching-design.md">02-switching-and-routing-design/</a>   L2/STP + OSPF design docs · configs/ (6 paste-ready .cfg files)
-├── <a href="03-network-security-policy/acl-traffic-matrix.md">03-network-security-policy/</a>        ACL traffic matrix · Layer-2 security policy
-├── <a href="04-automation-and-cloud-readiness/automation-brief.md">04-automation-and-cloud-readiness/</a> automation brief · SDN/REST model · Azure reservation · scripts · ansible
-├── <a href="05-verification-evidence/verification_report.md">05-verification-evidence/</a>          verification runbook (T-01…T-07) · screenshot checklist
-├── <a href="assets/topology.svg">assets/topology.svg</a>               high-resolution logical topology diagram
-└── index.html … verification.html     this website (7 pages)</div>
       <div class="callout">
-        <strong>Live design website:</strong> this repository is published via GitHub Pages at
-        <a href="https://peterken-365.github.io/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture/" target="_blank" rel="noopener">peterken-365.github.io/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture</a>.
-        Deployment details are documented in the <a href="https://github.com/peterken-365/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture#8-deployment-github-pages" target="_blank" rel="noopener">README</a>.
+        <p><span class="ttl">How to read this site.</span> Every claim is paired with the command that proves it and the config that implements it. The transcripts on these pages are reference outputs recorded from the golden configs in this repository; the <a href="verification.html">verification runbook</a> gives you the exact commands and pass criteria to reproduce them yourself. If you cannot run the lab, the <a href="lab.html">console replay</a> shows the recorded sessions — clearly labelled as a replay, not a live device.</p>
       </div>
-    </div>
-  </section>
-</main>
-<footer class="site-footer">
-  <div class="container footer-inner">
-    <div class="footer-brand">
-      <p class="f-title">Savannah Logistics Ltd. — Multi-Branch Enterprise Campus Network</p>
-      <p class="f-sub">Zero-Trust Segmentation &amp; WAN Architecture · CCNA 200-301 aligned · Nairobi HQ + Mombasa Branch · Designed and documented by peterken-365</p>
-    </div>
-    <nav class="footer-nav" aria-label="Footer navigation">
-      <a href="index.html">Overview</a>
-      <a href="topology.html">Topology</a>
-      <a href="ip-plan.html">IP Plan</a>
-      <a href="switching-routing.html">Design</a>
-      <a href="security.html">Security</a>
-      <a href="automation.html">Automation</a>
-      <a href="verification.html">Verification</a>
-      <a href="https://github.com/peterken-365/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture" target="_blank" rel="noopener">Repository</a>
-    </nav>
+
+      <h2>The build</h2>
+      <p>Two sites, six Cisco devices, one routed WAN, and a deny-by-default policy at every gateway. Built as a lab on Packet Tracer 8.2; the same configs target ISR 4331 and Catalyst 9200/9300 in production — lines Packet Tracer does not support are pre-commented as <code>PRODUCTION-ONLY</code> in each file.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Area</th><th>Implemented as</th></tr></thead>
+          <tbody>
+            <tr><td>Sites</td><td>2 — Nairobi HQ (MLS-HQ-CORE, SW1, SW2, R1) and Mombasa branch (R2, SW3), joined by routed point-to-point WAN links</td></tr>
+            <tr><td>Segmentation</td><td>VLANs 10 / 20 / 30 / 40 / 50 / 99 / 999 · Rapid PVST+ with an explicit root · native VLAN 999 + <code>nonegotiate</code> on every trunk</td></tr>
+            <tr><td>Routing</td><td>OSPFv2 area 0, three routers (RIDs 1.1.1.1 / 2.2.2.2 / 3.3.3.3) · <code>passive-interface default</code> · default route originated by R1</td></tr>
+            <tr><td>Internet edge</td><td>NAT/PAT overload on R1 · <code>EDGE-INBOUND</code> return-traffic filter · RFC 5737 documentation ranges in the lab</td></tr>
+            <tr><td>Zero trust</td><td>Extended ACLs at four gateways: <code>FINANCE-IN</code>, <code>GUEST-IN</code>, <code>MGMT-PLANE</code>, <code>BRANCH-IN</code> — denies logged to the central Syslog</td></tr>
+            <tr><td>Services</td><td>Central DHCP (SVL-DC01) with relay agents on the MLS SVIs and R2 · DNS (SVL-DNS01) · NTP + Syslog (SVL-NTPLOG01, 10.20.30.11)</td></tr>
+            <tr><td>Management</td><td>SSHv2 only (<code>transport input ssh</code>) · VTY <code>access-class</code> from VLAN 10 only · legal banner · <code>login block-for</code> · exec-timeouts</td></tr>
+            <tr><td>Layer-2 hardening</td><td>Port Security (sticky, max 2; AP port max 10) · DHCP Snooping · Dynamic ARP Inspection · BPDU Guard · quarantine VLAN 999</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Device inventory</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Device</th><th>Platform (lab)</th><th>Production target</th><th>Role</th><th>Mgmt address</th><th>Config</th></tr></thead>
+          <tbody>
+            <tr><td><b>R1-HQ-EDGE</b></td><td class="td-mono">ISR 2911</td><td>ISR 4331 · IOS-XE 17</td><td>Perimeter: NAT/PAT boundary, edge ACL, OSPF edge, default route</td><td class="td-mono">10.20.255.1 (Lo0)</td><td><a href="https://github.com/peterken-365/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture/blob/main/02-switching-and-routing-design/configs/R1-HQ-EDGE.cfg" target="_blank" rel="noopener">.cfg</a></td></tr>
+            <tr><td><b>R2-MOMBASA-EDGE</b></td><td class="td-mono">ISR 2911</td><td>ISR 4331</td><td>Branch gateway: router-on-a-stick (VLAN 50/99), branch ACL, DHCP relay</td><td class="td-mono">10.20.255.2 (Lo0)</td><td><a href="https://github.com/peterken-365/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture/blob/main/02-switching-and-routing-design/configs/R2-MOMBASA-EDGE.cfg" target="_blank" rel="noopener">.cfg</a></td></tr>
+            <tr><td><b>MLS-HQ-CORE</b></td><td class="td-mono">Catalyst 3650-24PS</td><td>Catalyst 9300</td><td>Collapsed core: SVI gateways, gateway ACLs, DHCP relay, Rapid PVST+ root</td><td class="td-mono">10.20.99.1 (SVI99)</td><td><a href="https://github.com/peterken-365/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture/blob/main/02-switching-and-routing-design/configs/MLS-HQ-CORE.cfg" target="_blank" rel="noopener">.cfg</a></td></tr>
+            <tr><td><b>SW1-HQ-ACCESS-1</b></td><td class="td-mono">Catalyst 2960-24TT</td><td>Catalyst 9200</td><td>HQ user access: IT (10), Finance (20), Guest (40)</td><td class="td-mono">10.20.99.2 (SVI99)</td><td><a href="https://github.com/peterken-365/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture/blob/main/02-switching-and-routing-design/configs/SW1-HQ-ACCESS-1.cfg" target="_blank" rel="noopener">.cfg</a></td></tr>
+            <tr><td><b>SW2-HQ-ACCESS-2</b></td><td class="td-mono">Catalyst 2960-24TT</td><td>Catalyst 9200</td><td>Server farm access: VLAN 30 (static bindings for DAI)</td><td class="td-mono">10.20.99.3 (SVI99)</td><td><a href="https://github.com/peterken-365/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture/blob/main/02-switching-and-routing-design/configs/SW2-HQ-ACCESS-2.cfg" target="_blank" rel="noopener">.cfg</a></td></tr>
+            <tr><td><b>SW3-MOMBASA-ACCESS</b></td><td class="td-mono">Catalyst 2960-24TT</td><td>Catalyst 9200</td><td>Branch access: VLAN 50</td><td class="td-mono">10.20.99.18 (SVI99)</td><td><a href="https://github.com/peterken-365/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture/blob/main/02-switching-and-routing-design/configs/SW3-MOMBASA-ACCESS.cfg" target="_blank" rel="noopener">.cfg</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Zero-trust policy at a glance</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Source → Destination</th><th>Verdict</th><th>Enforced at</th><th>Proven by</th></tr></thead>
+          <tbody>
+            <tr><td>Guest (VLAN 40) → Internet</td><td><span class="chip pass">PERMIT</span> DNS · HTTP · HTTPS only</td><td class="td-mono">MLS SVI40 · GUEST-IN</td><td><a href="verification.html#t-03">T-03</a></td></tr>
+            <tr><td>Guest (VLAN 40) → any internal VLAN</td><td><span class="chip drop">DENY ALL</span> logged</td><td class="td-mono">MLS SVI40 · GUEST-IN</td><td><a href="verification.html#t-02">T-02</a></td></tr>
+            <tr><td>Finance (VLAN 20) → Servers (VLAN 30)</td><td><span class="chip pass">PERMIT</span> app ports only (80/443/1433) + DNS</td><td class="td-mono">MLS SVI20 · FINANCE-IN</td><td><a href="verification.html#t-01">T-01</a></td></tr>
+            <tr><td>Branch (VLAN 50) → Finance (VLAN 20)</td><td><span class="chip drop">DENY</span> logged — explicit business rule</td><td class="td-mono">R2 Gi0/1.50 · BRANCH-IN</td><td><a href="verification.html#t-04">T-04</a></td></tr>
+            <tr><td>Branch (VLAN 50) → other internal VLANs</td><td><span class="chip drop">DENY</span> logged — servers + Internet only</td><td class="td-mono">R2 Gi0/1.50 · BRANCH-IN</td><td><a href="verification.html#t-04">T-04</a></td></tr>
+            <tr><td>IT Admin (VLAN 10) → Management (VLAN 99)</td><td><span class="chip pass">PERMIT</span> SSH only — double lock</td><td class="td-mono">MLS SVI99 · MGMT-PLANE + VTY ACL</td><td><a href="verification.html#t-06">T-06</a></td></tr>
+            <tr><td>Internet → Perimeter (R1)</td><td><span class="chip info">FILTER</span> established TCP · DNS/ICMP replies only</td><td class="td-mono">R1 Gi0/0 · EDGE-INBOUND</td><td><a href="security.html">matrix</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><a href="security.html">Full ACL listings and bindings →</a></p>
+
+      <h2>Verification evidence</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Test</th><th>Scenario</th><th>Pass bar</th></tr></thead>
+          <tbody>
+            <tr><td class="td-mono"><a href="verification.html#t-01">T-01</a></td><td>Finance → HQ app server, routed + policy</td><td>0% loss, HTTP loads, FINANCE-IN permit counters increment</td></tr>
+            <tr><td class="td-mono"><a href="verification.html#t-02">T-02</a></td><td>Guest → any internal target</td><td>100% loss, deny counter increments, syslog record</td></tr>
+            <tr><td class="td-mono"><a href="verification.html#t-03">T-03</a></td><td>Guest → Internet HTTP/HTTPS</td><td>PAT entry on R1, ICMP to the Internet stays denied</td></tr>
+            <tr><td class="td-mono"><a href="verification.html#t-04">T-04</a></td><td>Branch → HQ app server over OSPF</td><td>Three routed hops, zero static routes on R2, branch→Finance denied</td></tr>
+            <tr><td class="td-mono"><a href="verification.html#t-05">T-05</a></td><td>Rogue MAC / rogue BPDU on an access port</td><td>Port err-disabled on the first attack signature</td></tr>
+            <tr><td class="td-mono"><a href="verification.html#t-06">T-06</a></td><td>SSH from guest / finance / IT</td><td>Guest and finance fail at the gateways, IT succeeds, Telnet dead</td></tr>
+            <tr><td class="td-mono"><a href="verification.html#t-07">T-07</a></td><td>DHCP lease from the central server</td><td>Planned scope + snooping binding, rogue offers dropped</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Reproduce it yourself</h2>
+      <ol>
+        <li>Read the <a href="01-topology-and-ip-plan/packet-tracer-build-guide.md" target="_blank" rel="noopener">Packet Tracer build guide</a> — device placement, cabling table, server services. Estimated build time: 60–90 minutes.</li>
+        <li>Cable per the <a href="topology.html">link inventory</a> (or section 2 of the guide).</li>
+        <li>Paste configs in build order <b>MLS → SW1 → SW2 → SW3 → R1 → R2</b> from <a href="https://github.com/peterken-365/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture/tree/main/02-switching-and-routing-design/configs" target="_blank" rel="noopener">02-switching-and-routing-design/configs/</a>, then run <code>crypto key generate rsa modulus 2048</code> on every device (EXEC mode).</li>
+        <li>Configure the four server services (DHCP scopes, NTP + Syslog on, DNS records, HTTP).</li>
+        <li>Run the pre-flight checks <a href="verification.html#preflight">P-1 … P-8</a>.</li>
+        <li>Run T-01 … T-07 in order and compare with the transcripts on <a href="verification.html">the runbook page</a>. Outputs may differ cosmetically between Packet Tracer and IOS-XE — the pass criteria are behavioral.</li>
+      </ol>
+      <div class="callout">
+        <p>Want to see the expected outputs before building? The <a href="lab.html">lab console</a> replays the recorded CLI sessions per device — pick a device, type a command, compare.</p>
+      </div>
+
+      <h2>Repository map</h2>
+      <div class="filetree" aria-label="Repository structure"><b>Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture/</b>
+├── <a href="01-topology-and-ip-plan/topology.md">01-topology-and-ip-plan/</a>            topology.md · vlsm-ip-plan.md (+ CSV) · packet-tracer-build-guide.md
+├── <a href="02-switching-and-routing-design/l2-switching-design.md">02-switching-and-routing-design/</a>    l2-switching-design.md · ospf-routing-design.md · configs/ (6 golden .cfg)
+├── <a href="03-network-security-policy/acl-traffic-matrix.md">03-network-security-policy/</a>         acl-traffic-matrix.md · layer2-security-policy.md
+├── <a href="04-automation-and-cloud-readiness/automation-brief.md">04-automation-and-cloud-readiness/</a>  automation-brief.md · sdn-rest-api-model.md · azure-vpn-*.md/.cfg
+│                                      scripts/backup-and-drift-check.sh · ansible/inventory.ini · ansible/playbook.yml
+├── <a href="05-verification-evidence/verification_report.md">05-verification-evidence/</a>           verification_report.md (T-01…T-07) · screenshot-checklist.md
+├── <a href="https://github.com/peterken-365/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture/tree/main/device-configs">device-configs/</a>                     plain-text mirrors of the six configs (used by this site)
+├── <a href="assets/topology.svg">assets/topology.svg</a>                 logical topology diagram
+└── index.html … verification.html · lab.html   this documentation site (8 pages)</div>
+
+      <h2>Status and scope</h2>
+      <div class="callout warn">
+        <p><span class="ttl">Done:</span> design docs, six golden configs (v1.0), ACL policy matrix, build guide, runbook, and the recorded console evidence behind every transcript on this site.</p>
+        <p><span class="ttl">Pending:</span> screenshot captures under <code>captures/</code> per the <a href="05-verification-evidence/screenshot-checklist.md" target="_blank" rel="noopener">evidence checklist</a>. The fastest credibility check is to rebuild the lab yourself — that is the point of the runbook.</p>
+      </div>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p class="f-title">Savannah Logistics Ltd. — multi-branch enterprise campus network</p>
+        <nav aria-label="Footer navigation">
+          <a href="index.html">Overview</a>
+          <a href="lab.html">Lab console</a>
+          <a href="verification.html">Verification</a>
+          <a href="https://github.com/peterken-365/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture" target="_blank" rel="noopener">Repository</a>
+        </nav>
+      </div>
+      <div class="footer-base">
+        <p>© <span data-year>2026</span> peterken-365 · Junior Network &amp; Security Architect portfolio · CCNA 200-301.</p>
+        <p>Configs are lab/design values — rotate credentials before production deployment.</p>
+      </div>
+    </footer>
   </div>
-  <div class="container footer-base">
-    <p>© <span id="year">2026</span> peterken-365 — Junior Network &amp; Security Architect portfolio project.</p>
-    <p>Configs are lab/design values — rotate credentials before production deployment.</p>
-  </div>
-</footer>
+</div>
 <script src="script.js"></script>
 </body>
 </html>
