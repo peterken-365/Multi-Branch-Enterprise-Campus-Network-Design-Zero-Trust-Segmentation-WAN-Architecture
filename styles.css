@@ -149,7 +149,6 @@ a:hover { color: var(--green); text-decoration: underline; text-underline-offset
 }
 .side-nav a {
   display: flex;
-  justify-content: space-between;
   align-items: baseline;
   gap: 0.5rem;
   padding: 0.42rem 0.55rem;
@@ -158,7 +157,7 @@ a:hover { color: var(--green); text-decoration: underline; text-underline-offset
   color: var(--ink-2);
   text-decoration: none;
 }
-.side-nav a::before { content: "›"; color: var(--line-2); margin-right: 0.45rem; font-weight: 700; }
+.side-nav a::before { content: "›"; color: var(--line-2); margin-right: 0.1rem; font-weight: 700; }
 .side-nav a:hover { background: var(--raise); color: var(--ink); text-decoration: none; }
 .side-nav a:hover::before { color: var(--ink-3); }
 .side-nav a.active {
@@ -169,6 +168,7 @@ a:hover { color: var(--green); text-decoration: underline; text-underline-offset
 }
 .side-nav a.active::before { color: var(--green); }
 .side-nav a .n {
+  margin-left: auto;
   font: 600 0.58rem var(--mono);
   color: var(--ink-3);
   border: 1px solid var(--line-2);
