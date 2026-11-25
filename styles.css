@@ -58,7 +58,7 @@ body {
 /* ---------------------------------------------------------- ops statusline */
 /* CSS-only console chrome: mirrors the recorded lab state, one line, all pages. */
 body::before {
-  content: "SAVANNAH-LOGISTICS // NETOPS-LAB  \30b7 DEVICES 6/6 UP  \30b7 OSPF AREA 0 — ADJ 2/2 FULL  \30b7 VLANS 10/20/30/40/50/99/999  \30b7 TESTS T-01…T-07 DOCUMENTED  \30b7 CONFIGS v1.0  \30b7 REV 2026-03-03";
+  content: "SAVANNAH-LOGISTICS // NETOPS-LAB · DEVICES 6/6 UP · OSPF AREA 0 — ADJ 2/2 FULL · VLANS 10/20/30/40/50/99/999 · TESTS T-01…T-07 DOCUMENTED · CONFIGS v1.0 · REV 2026-03-03";
   position: fixed;
   top: 0;
   left: 0;
