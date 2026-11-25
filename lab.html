@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lab Console (replay) — Savannah Logistics Campus Network Lab</title>
+<meta name="description" content="Interactive replay of the recorded CLI sessions from the Savannah Logistics lab: pick a device, run show commands, compare outputs, and trace packets through the zero-trust policy.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="shell">
+  <aside class="sidebar" id="sidebar">
+    <a class="side-brand" href="index.html">
+      <svg width="22" height="22" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M32 15 L15 40 M32 15 L49 40 M15 40 L49 40" stroke="#0e7c4a" stroke-width="4" stroke-linecap="round"/><circle cx="32" cy="15" r="7" fill="#0e7c4a"/><circle cx="15" cy="40" r="7" fill="#8a5a00"/><circle cx="49" cy="40" r="7" fill="#8a5a00"/></svg>
+      <span><span class="t1">Savannah-Logistics</span><span class="t2">enterprise campus network lab</span></span>
+    </a>
+    <nav class="side-nav" aria-label="Primary navigation">
+      <p class="navlabel">Project</p>
+      <a href="index.html">Overview</a>
+      <a href="topology.html">Topology &amp; devices</a>
+      <a href="ip-plan.html">IP plan <span class="n">VLSM</span></a>
+      <p class="navlabel">Design</p>
+      <a href="switching-routing.html">Switching &amp; routing</a>
+      <a href="security.html">Security policy</a>
+      <a href="automation.html">Automation &amp; cloud</a>
+      <p class="navlabel">Proof</p>
+      <a href="verification.html">Verification runbook</a>
+      <a href="lab.html">Lab console <span class="n">replay</span></a>
+      <p class="navlabel">Source</p>
+      <a href="https://github.com/peterken-365/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture" target="_blank" rel="noopener">GitHub repository</a>
+      <a href="05-verification-evidence/verification_report.md" target="_blank" rel="noopener">Runbook (.md)</a>
+    </nav>
+    <div class="side-foot">
+      <p>CCNA 200-301 portfolio · peterken-365</p>
+      <p>Configs v1.0 · site rev. 2026-03-03</p>
+    </div>
+  </aside>
+  <div class="content-col">
+    <div class="topbar">
+      <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="sidebar"><span></span><span></span><span></span></button>
+      <span class="topbar-title">Lab console</span>
+      <a class="topbar-gh" href="https://github.com/peterken-365/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture" target="_blank" rel="noopener">GitHub</a>
+    </div>
+    <main id="main" class="docs">
+      <div class="page-head">
+        <p class="kicker">Interactive · recorded sessions</p>
+        <h1>Lab console — replay of the recorded CLI sessions</h1>
+        <p class="lede">Pick a device, type a command, and see what the six golden configs produce. Try the packet policy trace on the right to follow any flow through the zero-trust gateways.</p>
+      </div>
+
+      <div class="callout warn">
+        <p><span class="ttl">What this is (and is not).</span> This console <b>replays a recorded reference session</b> per device — it is not a live device and does not execute Cisco IOS. Commands outside the recorded set answer honestly (invalid input, or a pointer to the recorded alternative). To run anything live, build the lab from the <a href="01-topology-and-ip-plan/packet-tracer-build-guide.md" target="_blank" rel="noopener">build guide</a> — the golden configs in <a href="https://github.com/peterken-365/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture/tree/main/02-switching-and-routing-design/configs" target="_blank" rel="noopener">02-switching-and-routing-design/configs/</a> are the source of every transcript here.</p>
+      </div>
+
+      <div class="lab-grid">
+        <div>
+          <div class="devstrip" role="group" aria-label="Select device">
+            <button class="dev-btn" data-dev="R1-HQ-EDGE">R1-HQ-EDGE</button>
+            <button class="dev-btn" data-dev="R2-MOMBASA-EDGE">R2-MOMBASA-EDGE</button>
+            <button class="dev-btn" data-dev="MLS-HQ-CORE">MLS-HQ-CORE</button>
+            <button class="dev-btn" data-dev="SW1-HQ-ACCESS-1">SW1-HQ-ACCESS-1</button>
+            <button class="dev-btn" data-dev="SW2-HQ-ACCESS-2">SW2-HQ-ACCESS-2</button>
+            <button class="dev-btn" data-dev="SW3-MOMBASA-ACCESS">SW3-MOMBASA-ACCESS</button>
+          </div>
+          <p class="dev-meta" id="devMeta"><b>MLS-HQ-CORE</b> — Catalyst 3650-24PS — L3 core: SVI gateways, Rapid PVST+ root, DHCP relay, gateway ACLs — mgmt 10.20.99.1 (SVI99)</p>
+          <div class="term-window">
+            <div class="term-bar">
+              <i aria-hidden="true"></i>
+              <span class="t-name" id="termName">MLS-HQ-CORE — console</span>
+              <button id="termClear" class="t-clear" type="button">clear</button>
+            </div>
+            <div class="term-out" id="termOut" aria-live="polite"></div>
+            <div class="term-input-row">
+              <span class="tp" id="termPrompt">MLS-HQ-CORE#</span>
+              <input id="termIn" type="text" autocomplete="off" spellcheck="false" aria-label="Type a command to replay">
+            </div>
+          </div>
+          <p class="term-hints">Quick commands:
+            <button class="dev-btn" data-cmd="show vlan brief">show vlan brief</button>
+            <button class="dev-btn" data-cmd="show ip route">show ip route</button>
+            <button class="dev-btn" data-cmd="show access-lists">show access-lists</button>
+            <button class="dev-btn" data-cmd="show ip nat translations">show ip nat translations</button>
+            <button class="dev-btn" data-cmd="show port-security">show port-security</button>
+            <button class="dev-btn" data-cmd="show ip dhcp snooping binding">show ip dhcp snooping binding</button>
+            <button class="dev-btn" data-cmd="help">help</button>
+          </p>
+        </div>
+
+        <div class="lab-side">
+          <div class="panel">
+            <h3>Packet policy trace</h3>
+            <div class="field">
+              <label for="flowSel">Traffic matrix scenario</label>
+              <select id="flowSel" aria-label="Traffic matrix scenario"></select>
+            </div>
+            <button id="flowBtn" class="btn" type="button">Trace packet</button>
+            <div class="flow-out" id="flowOut" aria-live="polite"></div>
+          </div>
+
+          <div class="panel">
+            <h3>Suggested checks</h3>
+            <p>One click each — device and command are preselected:</p>
+            <p><button class="dev-btn" data-dev="MLS-HQ-CORE" data-cmd="show vlan brief">VLAN 1 has zero ports on MLS</button></p>
+            <p><button class="dev-btn" data-dev="MLS-HQ-CORE" data-cmd="show access-lists">isolation + mgmt counters</button></p>
+            <p><button class="dev-btn" data-dev="R1-HQ-EDGE" data-cmd="show ip nat translations">guest PAT entries on R1</button></p>
+            <p><button class="dev-btn" data-dev="R2-MOMBASA-EDGE" data-cmd="show ip route">branch routes are all OSPF</button></p>
+            <p><button class="dev-btn" data-dev="SW1-HQ-ACCESS-1" data-cmd="show ip dhcp snooping binding">snooping bindings on SW1</button></p>
+            <p><button class="dev-btn" data-dev="R1-HQ-EDGE" data-cmd="show ip ospf neighbor">both R1 adjacencies FULL</button></p>
+          </div>
+
+          <div class="panel">
+            <h3>How to verify for real</h3>
+            <p>1. Build the lab (<a href="01-topology-and-ip-plan/packet-tracer-build-guide.md" target="_blank" rel="noopener">guide</a>).</p>
+            <p>2. Paste the golden configs in order MLS → SW1 → SW2 → SW3 → R1 → R2.</p>
+            <p>3. Run the same commands on the real devices and compare with this replay — differences are cosmetic; the pass criteria are behavioral (<a href="verification.html">runbook</a>).</p>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p class="f-title">Savannah Logistics Ltd. — multi-branch enterprise campus network</p>
+        <nav aria-label="Footer navigation">
+          <a href="index.html">Overview</a>
+          <a href="lab.html">Lab console</a>
+          <a href="verification.html">Verification</a>
+          <a href="https://github.com/peterken-365/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture" target="_blank" rel="noopener">Repository</a>
+        </nav>
+      </div>
+      <div class="footer-base">
+        <p>© <span data-year>2026</span> peterken-365 · Junior Network &amp; Security Architect portfolio · CCNA 200-301.</p>
+        <p>Configs are lab/design values — rotate credentials before production deployment.</p>
+      </div>
+    </footer>
+  </div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
