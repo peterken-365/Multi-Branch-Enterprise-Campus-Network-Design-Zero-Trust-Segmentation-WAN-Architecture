@@ -3,212 +3,277 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zero-Trust Security Policy — Savannah Logistics Campus Network</title>
-<meta name="description" content="Device hardening standard, zero-trust ACL traffic matrix, deployed ACL listings and the Layer-2 attack mitigation suite for the Savannah Logistics enterprise campus network.">
+<title>Zero-Trust Security Policy — Savannah Logistics Campus Network Lab</title>
+<meta name="description" content="ACL traffic matrix, Layer-2 attack surface hardening and management-plane controls for the Savannah Logistics campus lab — with the deployed ACL listings and recorded evidence.">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
-<header class="site-header">
-  <div class="container header-inner">
-    <a class="brand" href="index.html">
-      <span class="brand-mark" aria-hidden="true">
-        <svg width="20" height="20" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M32 15 L15 40 M32 15 L49 40 M15 40 L49 40" stroke="#2bbd7f" stroke-width="4" stroke-linecap="round"/><circle cx="32" cy="15" r="7" fill="#3ddc97"/><circle cx="15" cy="40" r="7" fill="#f5b83d"/><circle cx="49" cy="40" r="7" fill="#f5b83d"/></svg>
-      </span>
-      <span class="brand-text">Savannah-Logistics<span class="brand-sub">Enterprise Network Blueprint</span></span>
+<div class="shell">
+  <aside class="sidebar" id="sidebar">
+    <a class="side-brand" href="index.html">
+      <svg width="22" height="22" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M32 15 L15 40 M32 15 L49 40 M15 40 L49 40" stroke="#0e7c4a" stroke-width="4" stroke-linecap="round"/><circle cx="32" cy="15" r="7" fill="#0e7c4a"/><circle cx="15" cy="40" r="7" fill="#8a5a00"/><circle cx="49" cy="40" r="7" fill="#8a5a00"/></svg>
+      <span><span class="t1">Savannah-Logistics</span><span class="t2">enterprise campus network lab</span></span>
     </a>
-    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="primary-nav"><span></span><span></span><span></span></button>
-    <nav class="site-nav" id="primary-nav" aria-label="Primary navigation">
+    <nav class="side-nav" aria-label="Primary navigation">
+      <p class="navlabel">Project</p>
       <a href="index.html">Overview</a>
-      <a href="topology.html">Topology</a>
-      <a href="ip-plan.html">IP Plan</a>
-      <a href="switching-routing.html">Design</a>
-      <a href="security.html">Security</a>
-      <a href="automation.html">Automation</a>
-      <a href="verification.html">Verification</a>
-      <a class="nav-gh" href="https://github.com/peterken-365/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture" target="_blank" rel="noopener">GitHub Repo</a>
+      <a href="topology.html">Topology &amp; devices</a>
+      <a href="ip-plan.html">IP plan <span class="n">VLSM</span></a>
+      <p class="navlabel">Design</p>
+      <a href="switching-routing.html">Switching &amp; routing</a>
+      <a href="security.html">Security policy</a>
+      <a href="automation.html">Automation &amp; cloud</a>
+      <p class="navlabel">Proof</p>
+      <a href="verification.html">Verification runbook</a>
+      <a href="lab.html">Lab console <span class="n">replay</span></a>
+      <p class="navlabel">Source</p>
+      <a href="https://github.com/peterken-365/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture" target="_blank" rel="noopener">GitHub repository</a>
+      <a href="05-verification-evidence/verification_report.md" target="_blank" rel="noopener">Runbook (.md)</a>
     </nav>
+    <div class="side-foot">
+      <p>CCNA 200-301 portfolio · peterken-365</p>
+      <p>Configs v1.0 · site rev. 2026-03-03</p>
+    </div>
+  </aside>
+  <div class="content-col">
+    <div class="topbar">
+      <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="sidebar"><span></span><span></span><span></span></button>
+      <span class="topbar-title">Security policy</span>
+      <a class="topbar-gh" href="https://github.com/peterken-365/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture" target="_blank" rel="noopener">GitHub</a>
+    </div>
+    <main id="main" class="docs">
+      <div class="page-head">
+        <p class="kicker">Design · zero trust</p>
+        <h1>Security policy — gateway ACLs, L2 hardening, management plane</h1>
+        <p class="lede">Deny-by-default at every enforcement point, with denies logged to the central Syslog so the hit counters double as an audit trail. Source of truth: <a href="03-network-security-policy/acl-traffic-matrix.md" target="_blank" rel="noopener">acl-traffic-matrix.md</a> · <a href="03-network-security-policy/layer2-security-policy.md" target="_blank" rel="noopener">layer2-security-policy.md</a>.</p>
+      </div>
+
+      <h2>Enforcement points</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>ACL</th><th>Type</th><th>Bound to</th><th>Direction</th><th>Role</th></tr></thead>
+          <tbody>
+            <tr><td class="td-mono">GUEST-IN</td><td>extended</td><td class="td-mono">MLS interface Vlan40</td><td>in</td><td>Guest hard-isolation + narrow Internet allowlist</td></tr>
+            <tr><td class="td-mono">FINANCE-IN</td><td>extended</td><td class="td-mono">MLS interface Vlan20</td><td>in</td><td>Servers reachable on approved app ports only</td></tr>
+            <tr><td class="td-mono">MGMT-PLANE</td><td>extended</td><td class="td-mono">MLS interface Vlan99</td><td>out</td><td>Guard into the management VLAN (IT SSH + NTP only)</td></tr>
+            <tr><td class="td-mono">BRANCH-IN</td><td>extended</td><td class="td-mono">R2 Gi0/1.50</td><td>in</td><td>Branch reaches VLAN 30 servers + Internet only; Finance hard-deny</td></tr>
+            <tr><td class="td-mono">EDGE-INBOUND</td><td>extended</td><td class="td-mono">R1 Gi0/0</td><td>in</td><td>Perimeter: established TCP + DNS/ICMP replies only</td></tr>
+            <tr><td class="td-mono">NAT-PERMITTED</td><td>extended</td><td class="td-mono">ip nat inside source list</td><td>n/a</td><td>NAT criteria — enterprise→enterprise is never translated</td></tr>
+            <tr><td class="td-mono">MGMT-ACCESS</td><td>standard</td><td class="td-mono">line vty 0 4 access-class in (all six devices)</td><td>in</td><td>Second lock: VTY accepts IT VLAN 10 sources only</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Traffic matrix</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>#</th><th>Source</th><th>Destination</th><th>Verdict</th><th>Enforced at</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>Guest VLAN 40</td><td>Internet</td><td><span class="chip pass">PERMIT</span> DNS/53, HTTP/80, HTTPS/443 only</td><td class="td-mono">MLS SVI40 · GUEST-IN</td></tr>
+            <tr><td>2</td><td>Guest VLAN 40</td><td>VLAN 10/20/30/50/99 + transit /30s</td><td><span class="chip drop">DENY ALL</span> logged</td><td class="td-mono">MLS SVI40 · GUEST-IN</td></tr>
+            <tr><td>3</td><td>Finance VLAN 20</td><td>Servers VLAN 30</td><td><span class="chip pass">PERMIT</span> 80/443/1433 + DNS + ICMP echo + traceroute probes</td><td class="td-mono">MLS SVI20 · FINANCE-IN</td></tr>
+            <tr><td>4</td><td>Finance VLAN 20</td><td>Internet / other VLANs</td><td><span class="chip pass">PERMIT</span> (final <code>permit ip any any</code>)</td><td class="td-mono">MLS SVI20 · FINANCE-IN</td></tr>
+            <tr><td>5</td><td>Branch VLAN 50</td><td>Finance VLAN 20</td><td><span class="chip drop">DENY</span> logged — explicit business rule</td><td class="td-mono">R2 Gi0/1.50 · BRANCH-IN</td></tr>
+            <tr><td>6</td><td>Branch VLAN 50</td><td>Other internal VLANs</td><td><span class="chip drop">DENY</span> logged — VLAN 30 servers + Internet only</td><td class="td-mono">R2 Gi0/1.50 · BRANCH-IN</td></tr>
+            <tr><td>7</td><td>IT Admin VLAN 10</td><td>Management VLAN 99</td><td><span class="chip pass">PERMIT</span> SSH/22 + ICMP only — double enforcement</td><td class="td-mono">MLS SVI99 · MGMT-PLANE + VTY</td></tr>
+            <tr><td>8</td><td>Any other source</td><td>Management VLAN 99</td><td><span class="chip drop">DENY</span> logged (NTP replies from 10.20.30.11 excepted)</td><td class="td-mono">MLS SVI99 · MGMT-PLANE</td></tr>
+            <tr><td>9</td><td>Internet (R1 Gi0/0 in)</td><td>Enterprise</td><td><span class="chip info">FILTER</span> established TCP + DNS/ICMP replies; deny+log the rest</td><td class="td-mono">R1 · EDGE-INBOUND</td></tr>
+            <tr><td>10</td><td>Internal → internal (NAT plane)</td><td>—</td><td><span class="chip info">NEVER TRANSLATED</span> so ACLs see true source IPs</td><td class="td-mono">R1 · NAT-PERMITTED</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Deployed ACL listings</h2>
+      <p>Exactly as configured in the golden files — reproduce with <code>show running-config</code> or compare the <a href="switching-routing.html">config viewer</a>.</p>
+
+      <span class="cli-label">GUEST-IN — MLS Vlan40, in</span>
+      <pre class="code">ip access-list extended GUEST-IN
+ remark === Guest VLAN 40: DNS + DHCP in, HTTP/HTTPS out, nothing internal ===
+ permit udp any any eq bootps
+ permit udp any any eq domain
+ deny ip any 10.20.0.0 0.0.255.255 log
+ permit tcp any any eq www
+ permit tcp any any eq 443
+ deny ip any any log</pre>
+
+      <span class="cli-label">FINANCE-IN — MLS Vlan20, in</span>
+      <pre class="code">ip access-list extended FINANCE-IN
+ remark === Finance VLAN 20 -&gt; Servers VLAN 30: approved app ports only ===
+ permit udp any any eq bootps
+ permit udp 10.20.20.0 0.0.0.127 host 10.20.30.12 eq domain
+ permit tcp 10.20.20.0 0.0.0.127 10.20.30.0 0.0.0.31 eq www
+ permit tcp 10.20.20.0 0.0.0.127 10.20.30.0 0.0.0.31 eq 443
+ permit tcp 10.20.20.0 0.0.0.127 10.20.30.0 0.0.0.31 eq 1433
+ permit icmp 10.20.20.0 0.0.0.127 10.20.30.0 0.0.0.31 echo
+ permit udp 10.20.20.0 0.0.0.127 10.20.30.0 0.0.0.31 range 33434 33534
+ deny ip 10.20.20.0 0.0.0.127 10.20.30.0 0.0.0.31
+ remark All other Finance traffic (Internet, other VLANs) is permitted
+ permit ip any any</pre>
+
+      <span class="cli-label">BRANCH-IN — R2 Gi0/1.50, in</span>
+      <pre class="code">ip access-list extended BRANCH-IN
+ remark === Branch VLAN 50: servers + Internet ONLY ===
+ permit udp any any eq bootps
+ remark Branch -&gt; internal DNS server only
+ permit udp 10.20.50.0 0.0.0.127 host 10.20.30.12 eq domain
+ remark Gateway reachability test (own sub-interface)
+ permit icmp 10.20.50.0 0.0.0.127 host 10.20.50.1 echo
+ remark Branch -&gt; HQ application servers: approved ports only
+ permit tcp 10.20.50.0 0.0.0.127 10.20.30.0 0.0.0.31 eq www
+ permit tcp 10.20.50.0 0.0.0.127 10.20.30.0 0.0.0.31 eq 443
+ permit icmp 10.20.50.0 0.0.0.127 10.20.30.0 0.0.0.31 echo
+ permit udp 10.20.50.0 0.0.0.127 10.20.30.0 0.0.0.31 range 33434 33534
+ remark HARD DENY: Branch -&gt; Finance (explicit business rule, logged)
+ deny ip 10.20.50.0 0.0.0.127 10.20.20.0 0.0.0.127 log
+ remark HARD DENY: any other internal enterprise destination (logged)
+ deny ip 10.20.50.0 0.0.0.127 10.20.0.0 0.0.255.255 log
+ remark Everything else = Internet (NAT happens at R1)
+ permit ip any any</pre>
+
+      <span class="cli-label">MGMT-PLANE (MLS Vlan99, out) + MGMT-ACCESS (VTY, all devices)</span>
+      <pre class="code">! MGMT-PLANE - what is allowed INTO the management VLAN:
+ip access-list extended MGMT-PLANE
+ remark === Guard INTO HQ mgmt VLAN 99: IT Admin SSH/ICMP + NTP replies only ===
+ permit tcp 10.20.10.0 0.0.0.63 10.20.99.0 0.0.0.15 eq 22
+ permit icmp 10.20.10.0 0.0.0.63 10.20.99.0 0.0.0.15
+ permit udp host 10.20.30.11 10.20.99.0 0.0.0.15 eq ntp
+ deny ip any 10.20.99.0 0.0.0.15 log
+!
+! MGMT-ACCESS - second lock on the door itself (identical on all six devices):
+ip access-list standard MGMT-ACCESS
+ remark VTY: IT Admin VLAN 10 (10.20.10.0/26) ONLY
+ permit 10.20.10.0 0.0.0.63
+ deny   any log</pre>
+
+      <span class="cli-label">EDGE-INBOUND — R1 Gi0/0, in</span>
+      <pre class="code">ip access-list extended EDGE-INBOUND
+ remark Perimeter: only return traffic for sessions initiated inside
+ permit tcp any any established
+ permit udp any eq domain any
+ permit icmp any any echo-reply
+ permit icmp any any time-exceeded
+ permit icmp any any unreachable
+ deny   ip any any log</pre>
+
+      <span class="cli-label">NAT-PERMITTED — R1 NAT criteria</span>
+      <pre class="code">ip access-list extended NAT-PERMITTED
+ remark NAT criteria: enterprise 10.20.0.0/16 toward non-enterprise ONLY
+ remark Internal-to-internal traffic is NEVER translated, so VTY/MGMT ACLs
+ remark always see true source addresses (zero-trust management plane).
+ deny   ip 10.20.0.0 0.0.255.255 10.20.0.0 0.0.255.255
+ permit ip 10.20.0.0 0.0.255.255 any</pre>
+
+      <h2>Layer-2 attack surface</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Port class</th><th>VLAN</th><th>Max MAC</th><th>Mode</th><th>Violation</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>User access (SW1 IT/Finance, SW3 staff)</td><td class="td-mono">10/20/50</td><td>2</td><td>sticky</td><td><span class="chip drop">shutdown</span></td><td>PortFast + BPDU Guard on every port</td></tr>
+            <tr><td>Wired guest (SW1 Fa0/12–18)</td><td class="td-mono">40</td><td>2</td><td>sticky</td><td><span class="chip drop">shutdown</span></td><td>Same trio</td></tr>
+            <tr><td>Guest Wi-Fi AP (SW1 Fa0/11)</td><td class="td-mono">40</td><td>10</td><td>sticky</td><td><span class="chip info">restrict</span></td><td>A busy AP must not err-disable</td></tr>
+            <tr><td>Server ports (SW2 Fa0/1–4)</td><td class="td-mono">30</td><td>1</td><td>sticky</td><td><span class="chip drop">shutdown</span></td><td>Fa0/1 is the DHCP server — snooping <b>trusted</b></td></tr>
+            <tr><td>Trunk uplinks</td><td class="td-mono">—</td><td>—</td><td>—</td><td>—</td><td><code>ip dhcp snooping trust</code> + <code>ip arp inspection trust</code></td></tr>
+            <tr><td>Unused ports (all switches)</td><td class="td-mono">999</td><td>—</td><td>—</td><td>—</td><td>access VLAN 999 + <code>shutdown</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>DHCP Snooping runs on VLANs 10/20/40 (SW1), 30 (SW2), 50 (SW3) with <code>no ip dhcp snooping information option</code> (Packet Tracer relay compatibility). DAI validates ARP on untrusted ports against the snooping bindings — and against <b>static</b> <code>ip source binding</code> entries on SW2, because servers are statically addressed and never speak DHCP.</p>
+
+      <h3>Console evidence — bindings and port state</h3>
+      <span class="cli-label">recorded · SW1-HQ-ACCESS-1# show ip dhcp snooping binding</span>
+      <pre class="cli"><span class="p">SW1-HQ-ACCESS-1#</span> show ip dhcp snooping binding
+MacAddress          IpAddress        Lease(sec)  Type           VLAN  Interface
+------------------  ---------------  ----------  -------------  ----  --------------------
+0050.56BE.1101      10.20.10.6       86400       dhcp-snooping   10   FastEthernet0/1
+0050.56BE.1102      10.20.20.6       86395       dhcp-snooping   20   FastEthernet0/3
+0050.56BE.1103      10.20.20.5       86322       dhcp-snooping   20   FastEthernet0/4
+0050.56BE.1501      10.20.40.100     86280       dhcp-snooping   40   FastEthernet0/12
+0050.56BE.1401      10.20.40.101     86400       dhcp-snooping   40   FastEthernet0/11
+0050.56BE.1402      10.20.40.102     86351       dhcp-snooping   40   FastEthernet0/11
+0050.56BE.1403      10.20.40.103     86217       dhcp-snooping   40   FastEthernet0/11
+Total number of bindings: 7
+
+[These bindings feed DAI: any ARP packet whose IP/MAC pair is not here
+ (or in a static binding) is dropped on untrusted ports.]</pre>
+      <span class="cli-label">recorded · SW2-HQ-ACCESS-2# show ip dhcp snooping binding</span>
+      <pre class="cli"><span class="p">SW2-HQ-ACCESS-2#</span> show ip dhcp snooping binding
+MacAddress          IpAddress        Lease(sec)  Type           VLAN  Interface
+------------------  ---------------  ----------  -------------  ----  --------------------
+0050.56AB.0010      10.20.30.10      infinite    static          30   FastEthernet0/1
+0050.56AB.0011      10.20.30.11      infinite    static          30   FastEthernet0/2
+0050.56AB.0012      10.20.30.12      infinite    static          30   FastEthernet0/3
+0050.56AB.0020      10.20.30.20      infinite    static          30   FastEthernet0/4
+Total number of bindings: 4</pre>
+      <span class="cli-label">recorded · SW1-HQ-ACCESS-1# show port-security interface FastEthernet0/3 (pristine)</span>
+      <pre class="cli"><span class="p">SW1-HQ-ACCESS-1#</span> show port-security interface FastEthernet0/3
+Port Security              : Enabled
+Port Status                : Secure-up
+Violation Mode             : Shutdown
+Aging Time                 : 0 mins
+Aging Type                 : Absolute
+SecureStatic Address Aging : Enabled
+Maximum MAC Addresses      : 2
+Total MAC Addresses        : 1
+Configured MAC Addresses   : 0
+Sticky MAC Addresses       : 1
+Last Source Address:Vlan   : 0050.56BE.1102:20
+Security Violation Count   : 0
+
+[Pristine state. The T-05 attack transcript (verification page) shows this
+ port after a rogue hub pushes a third MAC: Secure-shutdown, violation 1.]</pre>
+
+      <h2>Management plane</h2>
+      <p>Two independent locks protect every device:</p>
+      <ol class="note-list">
+        <li><b>Gateway lock</b> — <code>MGMT-PLANE</code> on MLS Vlan99 (out) and the isolation denies upstream: only 10.20.10.0/26 can even reach the management VLAN, and only for SSH/22 + ICMP. NTP replies from 10.20.30.11 are the sole other permitted flow (the switches are NTP clients).</li>
+        <li><b>Door lock</b> — <code>MGMT-ACCESS</code> via <code>access-class</code> on every VTY: the same /26, with <code>deny any log</code>. Even a packet that somehow bypassed the gateways cannot open a session from anywhere else.</li>
+      </ol>
+      <p>Telnet is not enabled anywhere (<code>transport input ssh</code> only); HTTP/HTTPS device management is off; a legal MOTD banner warns on every session; <code>login block-for 120 attempts 3 within 60</code> throttles brute force.</p>
+
+      <h3>Console evidence — SSH posture and the audit trail</h3>
+      <span class="cli-label">recorded · every device (example: SW1)</span>
+      <pre class="cli"><span class="p">SW1-HQ-ACCESS-1#</span> show ip ssh
+SSH Version: 2.0
+SSH protocol version 1: disabled 2: enabled</pre>
+      <span class="cli-label">recorded · SVL-NTPLOG01 → Syslog (samples from the T-02/T-06 tests)</span>
+      <pre class="code">Mar  3 14:52:07.318: %SEC-6-IPACCESSLOGDP: list GUEST-IN denied icmp 10.20.40.100 (Vlan40) -&gt; 10.20.20.5, 1 packet
+Mar  3 14:52:09.204: %SEC-6-IPACCESSLOGP: list MGMT-PLANE denied tcp 10.20.20.5(1025) (Vlan20) -&gt; 10.20.99.2, 1 packet
+Mar  3 14:52:14.451: %PORT_SECURITY-2-PSECURE_VIOLATION: Security violation occurred, caused by MAC address 00D0.9711.2201, on port FastEthernet0/3.</pre>
+
+      <h2>Central time + audit</h2>
+      <p>All six devices point NTP and Syslog at 10.20.30.11 (SVL-NTPLOG01) with per-site source interfaces — so log timestamps are comparable and denial records are trustworthy.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Device</th><th>NTP/Syslog source</th><th>Logging</th></tr></thead>
+          <tbody>
+            <tr><td class="td-mono">R1-HQ-EDGE</td><td class="td-mono">Loopback0 (10.20.255.1)</td><td class="td-mono">logging host 10.20.30.11 · trap informational</td></tr>
+            <tr><td class="td-mono">R2-MOMBASA-EDGE</td><td class="td-mono">Loopback0 (10.20.255.2)</td><td class="td-mono">logging host 10.20.30.11 · trap informational</td></tr>
+            <tr><td class="td-mono">MLS-HQ-CORE</td><td class="td-mono">Vlan99 (10.20.99.1)</td><td class="td-mono">logging host 10.20.30.11 · trap informational</td></tr>
+            <tr><td class="td-mono">SW1 / SW2</td><td class="td-mono">Vlan99 (10.20.99.2 / .3)</td><td class="td-mono">logging host 10.20.30.11 · trap informational</td></tr>
+            <tr><td class="td-mono">SW3-MOMBASA-ACCESS</td><td class="td-mono">Vlan99 (10.20.99.18)</td><td class="td-mono">logging host 10.20.30.11 · trap informational</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p class="f-title">Savannah Logistics Ltd. — multi-branch enterprise campus network</p>
+        <nav aria-label="Footer navigation">
+          <a href="index.html">Overview</a>
+          <a href="lab.html">Lab console</a>
+          <a href="verification.html">Verification</a>
+          <a href="https://github.com/peterken-365/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture" target="_blank" rel="noopener">Repository</a>
+        </nav>
+      </div>
+      <div class="footer-base">
+        <p>© <span data-year>2026</span> peterken-365 · Junior Network &amp; Security Architect portfolio · CCNA 200-301.</p>
+        <p>Configs are lab/design values — rotate credentials before production deployment.</p>
+      </div>
+    </footer>
   </div>
-</header>
-<main id="main">
-  <section class="page-hero">
-    <div class="container">
-      <p class="eyebrow">04 · Zero trust</p>
-      <h1>Zero-Trust Security Policy</h1>
-      <p class="lead">A hardened management plane, a gateway ACL matrix that denies by default, and the Layer-2 attack mitigation suite at every access port. Denies are logged — ACL counters and the central Syslog server double as audit evidence.</p>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="container">
-      <div class="section-head">
-        <p class="eyebrow">Pillar 1</p>
-        <h2>Device Hardening Standard v1.0</h2>
-        <p>Applied to all six devices before they touch the network. Every row is enforced in the golden configurations.</p>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr><th>Control</th><th>Standard</th><th>Applies to</th></tr>
-          </thead>
-          <tbody>
-            <tr><td><strong>Encrypted remote management</strong></td><td>SSHv2 ONLY — <span class="mono">transport input ssh</span>, RSA 2048-bit keys, Telnet disabled</td><td>All six devices</td></tr>
-            <tr><td><strong>Management source restriction</strong></td><td>VTY <span class="mono">access-class MGMT-ACCESS in</span> — permits 10.20.10.0/26 only</td><td>All six devices</td></tr>
-            <tr><td><strong>Encrypted secret storage</strong></td><td><span class="mono">enable secret</span>, <span class="mono">username netadmin secret</span>, <span class="mono">service password-encryption</span>; scrypt (<span class="mono">algorithm-type</span>) flagged as the production upgrade</td><td>All six devices</td></tr>
-            <tr><td><strong>Brute-force protection</strong></td><td><span class="mono">login block-for 120 attempts 3 within 60</span></td><td>All six devices</td></tr>
-            <tr><td><strong>Session hygiene</strong></td><td><span class="mono">exec-timeout 10 0</span> on console + VTY, <span class="mono">logging synchronous</span></td><td>All six devices</td></tr>
-            <tr><td><strong>Legal warning banner</strong></td><td>MOTD unauthorized-access banner with contact address</td><td>All six devices</td></tr>
-            <tr><td><strong>Web servers disabled</strong></td><td><span class="mono">no ip http server</span> · <span class="mono">no ip http secure-server</span></td><td>All six devices</td></tr>
-            <tr><td><strong>Console protection</strong></td><td><span class="mono">login local</span> on con 0; comms rooms physically secured (process control)</td><td>All six devices</td></tr>
-            <tr><td><strong>DNS hygiene</strong></td><td><span class="mono">no ip domain-lookup</span>; <span class="mono">ip domain-name</span> only for SSH key identity</td><td>All six devices</td></tr>
-            <tr><td><strong>Central time + logging</strong></td><td>NTP to 10.20.30.11 (EAT +3, msec timestamps) · Syslog to 10.20.30.11, trap informational, buffered 16384</td><td>All six devices</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </section>
-
-  <section class="section section-alt">
-    <div class="container">
-      <div class="section-head">
-        <p class="eyebrow">Pillar 3 · East-west + north-south</p>
-        <h2>ACL matrix and interface bindings</h2>
-        <p>Every gateway in the design enforces an explicit policy. Nothing is trusted because of where it sits — only because a specific rule permits it.</p>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr><th>ACL</th><th>Type</th><th>Bound to</th><th>Direction</th><th>Purpose</th></tr>
-          </thead>
-          <tbody>
-            <tr><td class="mono"><strong>GUEST-IN</strong></td><td>extended</td><td class="mono">MLS interface Vlan40</td><td class="mono">in</td><td>Guest hard-isolation — DNS/DHCP in, HTTP/HTTPS out, nothing internal</td></tr>
-            <tr><td class="mono"><strong>FINANCE-IN</strong></td><td>extended</td><td class="mono">MLS interface Vlan20</td><td class="mono">in</td><td>Finance → Servers: approved app ports only (80/443/1433) + DNS</td></tr>
-            <tr><td class="mono"><strong>MGMT-PLANE</strong></td><td>extended</td><td class="mono">MLS interface Vlan99</td><td class="mono">out</td><td>Only IT Admin SSH/ICMP + NTP replies may enter the management VLAN</td></tr>
-            <tr><td class="mono"><strong>BRANCH-IN</strong></td><td>extended</td><td class="mono">R2 Gi0/1.50</td><td class="mono">in</td><td>Branch: servers + Internet only; Finance hard-denied</td></tr>
-            <tr><td class="mono"><strong>EDGE-INBOUND</strong></td><td>extended</td><td class="mono">R1 Gi0/0</td><td class="mono">in</td><td>Perimeter: established TCP + DNS/ICMP replies only; deny+log rest</td></tr>
-            <tr><td class="mono"><strong>NAT-PERMITTED</strong></td><td>extended</td><td class="mono">NAT criteria only</td><td class="mono">n/a</td><td>Never translates internal→internal — VTY/MGMT ACLs see true source IPs</td></tr>
-            <tr><td class="mono"><strong>MGMT-ACCESS</strong></td><td>standard</td><td class="mono">line vty 0 4 access-class in</td><td class="mono">in</td><td>Second lock on the door itself — every router and switch</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <h3 style="font-size:1.15rem;margin-top:1.6rem">Deployed ACL listings</h3>
-      <div class="terminal">
-        <div class="terminal-bar"><i></i><i></i><i></i><span>ip access-list extended GUEST-IN — MLS SVI 40, in</span></div>
-        <pre><span class="tok-permit">permit udp any any eq bootps</span>          <span class="tok-c">! DHCP via relay</span>
-<span class="tok-permit">permit udp any any eq domain</span>          <span class="tok-c">! DNS (internal 10.20.30.12 or external)</span>
-<span class="tok-deny">deny   ip any 10.20.0.0 0.0.255.255</span>   <span class="tok-c">! HARD ISOLATION from the entire enterprise</span>
-<span class="tok-permit">permit tcp any any eq www</span>             <span class="tok-c">! Internet HTTP</span>
-<span class="tok-permit">permit tcp any any eq 443</span>             <span class="tok-c">! Internet HTTPS</span>
-<span class="tok-deny">deny   ip any any log</span>                 <span class="tok-c">! everything else, logged</span></pre>
-      </div>
-      <div class="terminal">
-        <div class="terminal-bar"><i></i><i></i><i></i><span>ip access-list extended FINANCE-IN — MLS SVI 20, in</span></div>
-        <pre><span class="tok-permit">permit udp any any eq bootps</span>
-<span class="tok-permit">permit udp 10.20.20.0 0.0.0.127 host 10.20.30.12 eq domain</span>
-<span class="tok-permit">permit tcp 10.20.20.0 0.0.0.127 10.20.30.0 0.0.0.31 eq www</span>
-<span class="tok-permit">permit tcp 10.20.20.0 0.0.0.127 10.20.30.0 0.0.0.31 eq 443</span>
-<span class="tok-permit">permit tcp 10.20.20.0 0.0.0.127 10.20.30.0 0.0.0.31 eq 1433</span>
-<span class="tok-permit">permit icmp 10.20.20.0 0.0.0.127 10.20.30.0 0.0.0.31 echo</span>
-<span class="tok-permit">permit udp 10.20.20.0 0.0.0.127 10.20.30.0 0.0.0.31 range 33434 33534</span>  <span class="tok-c">! traceroute probes</span>
-<span class="tok-deny">deny   ip 10.20.20.0 0.0.0.127 10.20.30.0 0.0.0.31</span>   <span class="tok-c">! rest of VLAN 30 closed</span>
-<span class="tok-permit">permit ip any any</span>   <span class="tok-c">! Internet + other VLANs per matrix</span></pre>
-      </div>
-      <div class="terminal">
-        <div class="terminal-bar"><i></i><i></i><i></i><span>ip access-list extended BRANCH-IN — R2 Gi0/1.50, in</span></div>
-        <pre><span class="tok-permit">permit udp any any eq bootps</span>
-<span class="tok-permit">permit udp 10.20.50.0 0.0.0.127 host 10.20.30.12 eq domain</span>
-<span class="tok-permit">permit icmp 10.20.50.0 0.0.0.127 host 10.20.50.1 echo</span>
-<span class="tok-permit">permit tcp 10.20.50.0 0.0.0.127 10.20.30.0 0.0.0.31 eq www</span>
-<span class="tok-permit">permit tcp 10.20.50.0 0.0.0.127 10.20.30.0 0.0.0.31 eq 443</span>
-<span class="tok-permit">permit icmp 10.20.50.0 0.0.0.127 10.20.30.0 0.0.0.31 echo</span>
-<span class="tok-permit">permit udp 10.20.50.0 0.0.0.127 10.20.30.0 0.0.0.31 range 33434 33534</span>
-<span class="tok-deny">deny   ip 10.20.50.0 0.0.0.127 10.20.20.0 0.0.0.127 log</span>   <span class="tok-c">! Branch → Finance: HARD DENY</span>
-<span class="tok-deny">deny   ip 10.20.50.0 0.0.0.127 10.20.0.0 0.0.255.255 log</span>   <span class="tok-c">! every other internal dest</span>
-<span class="tok-permit">permit ip any any</span>                                          <span class="tok-c">! Internet via NAT at R1</span></pre>
-      </div>
-      <div class="terminal">
-        <div class="terminal-bar"><i></i><i></i><i></i><span>MGMT-PLANE (MLS SVI 99, out) + MGMT-ACCESS (VTY, all devices)</span></div>
-        <pre><span class="tok-c">! MGMT-PLANE — what may enter the management VLAN:</span>
-<span class="tok-permit">permit tcp 10.20.10.0 0.0.0.63 10.20.99.0 0.0.0.15 eq 22</span>    <span class="tok-c">! IT Admin SSH only</span>
-<span class="tok-permit">permit icmp 10.20.10.0 0.0.0.63 10.20.99.0 0.0.0.15</span>
-<span class="tok-permit">permit udp host 10.20.30.11 10.20.99.0 0.0.0.15 eq ntp</span>
-<span class="tok-deny">deny   ip any 10.20.99.0 0.0.0.15 log</span>
-
-<span class="tok-c">! MGMT-ACCESS — second lock on every VTY (all six devices):</span>
-<span class="tok-permit">permit 10.20.10.0 0.0.0.63</span>    <span class="tok-c">! IT Admin subnet</span>
-<span class="tok-deny">deny   any log</span></pre>
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="container">
-      <div class="section-head">
-        <p class="eyebrow">Layer 2</p>
-        <h2>The switch-security trio at the access layer</h2>
-        <p>Rogue DHCP, ARP poisoning and MAC-spoofing hubs are stopped at the wall jack — exactly what verification tests T-05 and T-06 prove.</p>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr><th>Control</th><th>SW1 (users)</th><th>SW2 (servers)</th><th>SW3 (branch)</th></tr>
-          </thead>
-          <tbody>
-            <tr><td><strong>Port Security</strong></td><td>User ports: max 2, sticky, violation shutdown · AP port: max 10, restrict</td><td>Server ports: max 1, sticky, violation shutdown</td><td>Access ports: max 2, sticky, violation shutdown</td></tr>
-            <tr><td><strong>DHCP Snooping</strong></td><td>VLANs 10,20,40 · trust Gi0/1 only</td><td>VLAN 30 · trust Gi0/1 + Fa0/1 (DHCP server port)</td><td>VLAN 50 · trust Gi0/1 only</td></tr>
-            <tr><td><strong>Dynamic ARP Inspection</strong></td><td>VLANs 10,20,40 · trust Gi0/1</td><td>VLAN 30 + 4 static <span class="mono">ip source binding</span> entries for the static server IPs</td><td>VLAN 50 · trust Gi0/1</td></tr>
-            <tr><td><strong>BPDU Guard + PortFast</strong></td><td>All access ports</td><td>All server ports</td><td>All access ports</td></tr>
-            <tr><td><strong>Quarantine</strong></td><td class="mono">Fa0/19-24 → VLAN 999, shutdown</td><td class="mono">Fa0/5-24 → VLAN 999, shutdown</td><td class="mono">Fa0/17-24 → VLAN 999, shutdown</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="callout callout-amber">
-        <strong>T-06 double enforcement:</strong> an unprivileged user in Guest VLAN 40 attempting SSH fails <strong>twice over</strong> — first <span class="mono">GUEST-IN</span> drops the packet at the guest gateway (it never routes), and even if a host somehow reached the device, <span class="mono">MGMT-ACCESS</span> on the VTY lines only accepts 10.20.10.0/26 sources, with the attempt visible in Syslog via <span class="mono">deny any log</span>.
-      </div>
-
-      <h3 style="font-size:1.15rem;margin-top:1.8rem">Residual risks &amp; roadmap (honest engineering)</h3>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr><th>Risk</th><th>Status</th><th>Planned mitigation</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>Single HQ edge router (R1)</td><td><span class="pill pill-amber">Accepted for scope</span></td><td>HSRP pair + dual ISP in the production phase</td></tr>
-            <tr><td>Local device accounts</td><td><span class="pill pill-amber">Accepted for scope</span></td><td>Central AAA (TACACS+/ISE) with per-command authorization</td></tr>
-            <tr><td>Guest Wi-Fi is an open SSID</td><td><span class="pill pill-amber">Accepted for lab scope</span></td><td>WPA2/3-Enterprise or captive portal + client isolation in production</td></tr>
-            <tr><td>Syslog over UDP</td><td><span class="pill pill-amber">Accepted for scope</span></td><td>Syslog over TLS or SNMPv3 traps in production</td></tr>
-            <tr><td>SNMP not deployed</td><td><span class="pill pill-amber">Accepted for scope</span></td><td>SNMPv3 authPriv or NETCONF/RESTCONF telemetry (see the automation page)</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p><a class="card-link" href="03-network-security-policy/acl-traffic-matrix.md" target="_blank" rel="noopener">Full ACL traffic matrix on GitHub →</a> &nbsp;·&nbsp; <a class="card-link" href="03-network-security-policy/layer2-security-policy.md" target="_blank" rel="noopener">Layer-2 security policy on GitHub →</a></p>
-    </div>
-  </section>
-</main>
-<footer class="site-footer">
-  <div class="container footer-inner">
-    <div class="footer-brand">
-      <p class="f-title">Savannah Logistics Ltd. — Multi-Branch Enterprise Campus Network</p>
-      <p class="f-sub">Zero-Trust Segmentation &amp; WAN Architecture · CCNA 200-301 aligned · Nairobi HQ + Mombasa Branch · Designed and documented by peterken-365</p>
-    </div>
-    <nav class="footer-nav" aria-label="Footer navigation">
-      <a href="index.html">Overview</a>
-      <a href="topology.html">Topology</a>
-      <a href="ip-plan.html">IP Plan</a>
-      <a href="switching-routing.html">Design</a>
-      <a href="security.html">Security</a>
-      <a href="automation.html">Automation</a>
-      <a href="verification.html">Verification</a>
-      <a href="https://github.com/peterken-365/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture" target="_blank" rel="noopener">Repository</a>
-    </nav>
-  </div>
-  <div class="container footer-base">
-    <p>© <span id="year">2026</span> peterken-365 — Junior Network &amp; Security Architect portfolio project.</p>
-    <p>Configs are lab/design values — rotate credentials before production deployment.</p>
-  </div>
-</footer>
+</div>
 <script src="script.js"></script>
 </body>
 </html>
