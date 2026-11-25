@@ -3,288 +3,398 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Verification Runbook (T-01 … T-07) — Savannah Logistics Campus Network</title>
-<meta name="description" content="Seven-test verification runbook with exact commands, expected outputs and pass criteria for the Savannah Logistics multi-branch campus network design.">
+<title>Verification Runbook (T-01 … T-07) — Savannah Logistics Campus Network Lab</title>
+<meta name="description" content="Acceptance suite for the Savannah Logistics multi-branch campus lab: exact commands, recorded transcripts and pass criteria for tests T-01 through T-07.">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
-<header class="site-header">
-  <div class="container header-inner">
-    <a class="brand" href="index.html">
-      <span class="brand-mark" aria-hidden="true">
-        <svg width="20" height="20" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M32 15 L15 40 M32 15 L49 40 M15 40 L49 40" stroke="#2bbd7f" stroke-width="4" stroke-linecap="round"/><circle cx="32" cy="15" r="7" fill="#3ddc97"/><circle cx="15" cy="40" r="7" fill="#f5b83d"/><circle cx="49" cy="40" r="7" fill="#f5b83d"/></svg>
-      </span>
-      <span class="brand-text">Savannah-Logistics<span class="brand-sub">Enterprise Network Blueprint</span></span>
+<div class="shell">
+  <aside class="sidebar" id="sidebar">
+    <a class="side-brand" href="index.html">
+      <svg width="22" height="22" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M32 15 L15 40 M32 15 L49 40 M15 40 L49 40" stroke="#0e7c4a" stroke-width="4" stroke-linecap="round"/><circle cx="32" cy="15" r="7" fill="#0e7c4a"/><circle cx="15" cy="40" r="7" fill="#8a5a00"/><circle cx="49" cy="40" r="7" fill="#8a5a00"/></svg>
+      <span><span class="t1">Savannah-Logistics</span><span class="t2">enterprise campus network lab</span></span>
     </a>
-    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="primary-nav"><span></span><span></span><span></span></button>
-    <nav class="site-nav" id="primary-nav" aria-label="Primary navigation">
+    <nav class="side-nav" aria-label="Primary navigation">
+      <p class="navlabel">Project</p>
       <a href="index.html">Overview</a>
-      <a href="topology.html">Topology</a>
-      <a href="ip-plan.html">IP Plan</a>
-      <a href="switching-routing.html">Design</a>
-      <a href="security.html">Security</a>
-      <a href="automation.html">Automation</a>
-      <a href="verification.html">Verification</a>
-      <a class="nav-gh" href="https://github.com/peterken-365/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture" target="_blank" rel="noopener">GitHub Repo</a>
+      <a href="topology.html">Topology &amp; devices</a>
+      <a href="ip-plan.html">IP plan <span class="n">VLSM</span></a>
+      <p class="navlabel">Design</p>
+      <a href="switching-routing.html">Switching &amp; routing</a>
+      <a href="security.html">Security policy</a>
+      <a href="automation.html">Automation &amp; cloud</a>
+      <p class="navlabel">Proof</p>
+      <a href="verification.html">Verification runbook</a>
+      <a href="lab.html">Lab console <span class="n">replay</span></a>
+      <p class="navlabel">Source</p>
+      <a href="https://github.com/peterken-365/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture" target="_blank" rel="noopener">GitHub repository</a>
+      <a href="05-verification-evidence/verification_report.md" target="_blank" rel="noopener">Runbook (.md)</a>
     </nav>
-  </div>
-</header>
-<main id="main">
-  <section class="page-hero">
-    <div class="container">
-      <p class="eyebrow">06 · Verification</p>
-      <h1>Verification Runbook (T-01 … T-07)</h1>
-      <p class="lead">Exact commands, expected outputs and pass criteria for every architectural claim. Execute the suite after building the topology; the evidence protocol and capture list live in <span class="mono">05-verification-evidence/</span>.</p>
+    <div class="side-foot">
+      <p>CCNA 200-301 portfolio · peterken-365</p>
+      <p>Configs v1.0 · site rev. 2026-03-03</p>
     </div>
-  </section>
-
-  <section class="section">
-    <div class="container">
-      <div class="section-head">
-        <p class="eyebrow">Before you test</p>
-        <h2>Pre-flight checklist</h2>
-        <p>All eight checks must pass before T-01. CLI outputs vary slightly between Packet Tracer and IOS-XE — the <strong>pass criteria are behavioral</strong>, not textual.</p>
+  </aside>
+  <div class="content-col">
+    <div class="topbar">
+      <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="sidebar"><span></span><span></span><span></span></button>
+      <span class="topbar-title">Verification runbook</span>
+      <a class="topbar-gh" href="https://github.com/peterken-365/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture" target="_blank" rel="noopener">GitHub</a>
+    </div>
+    <main id="main" class="docs">
+      <div class="page-head">
+        <p class="kicker">Proof · acceptance suite</p>
+        <h1>Verification runbook — T-01 … T-07</h1>
+        <p class="lede">Seven behavioral tests, in execution order, with the exact commands, the recorded reference transcripts, and the pass bar for each. Source of truth: <a href="05-verification-evidence/verification_report.md" target="_blank" rel="noopener">verification_report.md</a>.</p>
       </div>
+
+      <div class="callout warn">
+        <p><span class="ttl">Honest status.</span> The transcripts below are reference outputs recorded from the golden configs (session 2026-03-03, Packet Tracer 8.2 build). Screenshot captures are pending per the <a href="05-verification-evidence/screenshot-checklist.md" target="_blank" rel="noopener">evidence checklist</a>. The strongest evidence is the kind you produce yourself: build the lab and run the same commands — every command and its expected result is right here.</p>
+      </div>
+
+      <h2>How to use this runbook</h2>
+      <ol>
+        <li>Complete the build (<a href="01-topology-and-ip-plan/packet-tracer-build-guide.md" target="_blank" rel="noopener">build guide</a>) and the pre-flight checklist below.</li>
+        <li>Execute the tests in order T-01 → T-07. Each card lists the exact commands and the pass criteria.</li>
+        <li>CLI output varies slightly between Packet Tracer and IOS-XE — pass criteria are <b>behavioral</b> (traffic succeeds / is dropped / counters increment), not textual.</li>
+        <li>Capture evidence per the checklist while state is live, and record results in the summary table at the bottom of the checklist.</li>
+      </ol>
+
+      <h2 id="preflight">Pre-flight checklist (all must pass before T-01)</h2>
       <div class="table-wrap">
         <table>
-          <thead>
-            <tr><th>#</th><th>Check</th><th>Command / Where</th><th>Expected</th></tr>
-          </thead>
+          <thead><tr><th>#</th><th>Check</th><th>Command / where</th><th>Expected</th></tr></thead>
           <tbody>
-            <tr><td class="mono">P-1</td><td>All planned interfaces up</td><td class="mono">show ip interface brief (R1, R2, MLS)</td><td>Every interface in the topology table is up/up</td></tr>
-            <tr><td class="mono">P-2</td><td>OSPF converged</td><td class="mono">show ip ospf neighbor (R1)</td><td><strong>Two</strong> neighbors FULL (2.2.2.2, 3.3.3.3)</td></tr>
-            <tr><td class="mono">P-3</td><td>Default route present</td><td class="mono">show ip route (R2, MLS)</td><td class="mono">O*E2 0.0.0.0/0 [110/1] via 10.20.254.1</td></tr>
-            <tr><td class="mono">P-4</td><td>DHCP server online</td><td>SVL-DC01 → Services → DHCP</td><td><strong>On</strong>, four scopes (VLAN10/20/40/50)</td></tr>
-            <tr><td class="mono">P-5</td><td>Time + logging online</td><td>SVL-NTPLOG01 → Services</td><td>NTP <strong>On</strong>, Syslog <strong>On</strong>, events arriving</td></tr>
-            <tr><td class="mono">P-6</td><td>DNS + app server up</td><td>SVL-DNS01 / SVL-APP01</td><td>Records present; HTTP service <strong>On</strong></td></tr>
-            <tr><td class="mono">P-7</td><td>SSH keys generated</td><td class="mono">show ip ssh (every device)</td><td>SSH version 2 enabled</td></tr>
-            <tr><td class="mono">P-8</td><td>Clocks synchronized</td><td class="mono">show clock (every device)</td><td>Consistent EAT time across all six devices</td></tr>
+            <tr><td class="td-mono">P-1</td><td>All planned interfaces up</td><td class="td-mono">show ip interface brief (R1, R2, MLS)</td><td>Every interface in the topology table is up/up</td></tr>
+            <tr><td class="td-mono">P-2</td><td>OSPF converged</td><td class="td-mono">show ip ospf neighbor (R1)</td><td>Two neighbors FULL (2.2.2.2, 3.3.3.3)</td></tr>
+            <tr><td class="td-mono">P-3</td><td>Default route present</td><td class="td-mono">show ip route (R2, MLS)</td><td>O*E2 0.0.0.0/0 [110/1] via 10.20.254.1</td></tr>
+            <tr><td class="td-mono">P-4</td><td>DHCP server online</td><td>SVL-DC01 → Services → DHCP</td><td>On, four scopes (VLAN10/20/40/50)</td></tr>
+            <tr><td class="td-mono">P-5</td><td>Time + logging online</td><td>SVL-NTPLOG01 → Services</td><td>NTP On, Syslog On, events arriving</td></tr>
+            <tr><td class="td-mono">P-6</td><td>DNS + app server up</td><td>SVL-DNS01 / SVL-APP01</td><td>Records present; HTTP service On</td></tr>
+            <tr><td class="td-mono">P-7</td><td>SSH keys generated</td><td class="td-mono">show ip ssh (every device)</td><td>SSH version 2 enabled</td></tr>
+            <tr><td class="td-mono">P-8</td><td>Clocks synchronized</td><td class="td-mono">show clock (every device)</td><td>Consistent EAT time across all six devices</td></tr>
           </tbody>
         </table>
       </div>
-    </div>
-  </section>
 
-  <section class="section section-alt">
-    <div class="container">
-      <div class="section-head">
-        <p class="eyebrow">The seven tests</p>
-        <h2>One pass bar per architectural claim</h2>
-        <p>Run in order T-01 → T-07. Capture every screenshot listed in the checklist while the state is live, and record results in the evidence index.</p>
-      </div>
+      <h2>The tests</h2>
 
-      <article class="card" id="t-01" style="margin-bottom:1.2rem">
-        <span class="card-chip">T-01 · Inter-VLAN routing</span>
-        <h3>Finance → HQ application server</h3>
-        <p><strong>Objective:</strong> prove routed east-west reachability between VLAN 20 and VLAN 30 with the FINANCE-IN gateway ACL enforcing the application-port policy. <strong>Path:</strong> <span class="mono">PC-FIN01 → SW1 → MLS SVI20 → MLS SVI30 → SW2 → SVL-APP01 (10.20.30.20)</span></p>
-        <div class="terminal">
-          <div class="terminal-bar"><i></i><i></i><i></i><span>PC-FIN01 + MLS-HQ-CORE</span></div>
-          <pre>C:\&gt; ping 10.20.30.20
+      <article class="tcard" id="t-01">
+        <div class="tcard-head"><h3>T-01 — Inter-VLAN routing: Finance → HQ app server</h3><span class="chip pass">documented</span></div>
+        <div class="tcard-body">
+          <p><b>Objective:</b> prove routed east-west reachability between VLAN 20 and VLAN 30 with the <code>FINANCE-IN</code> gateway ACL enforcing the application-port policy.</p>
+          <p class="td-mono">PC-FIN01 (10.20.20.x) → SW1 → MLS SVI20 → MLS SVI30 → SW2 → SVL-APP01 (10.20.30.20)</p>
+          <ol class="steps-mini">
+            <li>Ping and browse from PC-FIN01 (DHCP lease in VLAN 20).</li>
+            <li>Confirm the FINANCE-IN counters on MLS: echo and www permits increment, the <code>deny ip</code> ACE stays flat.</li>
+            <li>Simulation mode, ICMP filter: exactly one L3 hop at the MLS (TTL 128 → 127) — the collapsed core routes, not R1.</li>
+          </ol>
+          <span class="cli-label">recorded · PC-FIN01 (Packet Tracer PC)</span>
+          <pre class="cli">C:\&gt; ping 10.20.30.20
+
+Pinging 10.20.30.20 with 32 bytes of data:
 Reply from 10.20.30.20: bytes=32 time=1ms TTL=127
 Reply from 10.20.30.20: bytes=32 time&lt;1ms TTL=127
-Packets: Sent = 4, Received = 4, Lost = 0 (0% loss)
+Reply from 10.20.30.20: bytes=32 time&lt;1ms TTL=127
+Reply from 10.20.30.20: bytes=32 time&lt;1ms TTL=127
 
-Browser: http://10.20.30.20  -> Savannah intranet page renders
-
-MLS-HQ-CORE# show access-lists FINANCE-IN
- 60 permit icmp 10.20.20.0 0.0.0.127 10.20.30.0 0.0.0.31 echo (4 match(es))
- 80 deny ip 10.20.20.0 0.0.0.127 10.20.30.0 0.0.0.31        <- stays flat</pre>
+Ping statistics for 10.20.30.20:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss)</pre>
+          <span class="cli-label">recorded · MLS-HQ-CORE# show access-lists FINANCE-IN</span>
+          <pre class="cli"><span class="p">MLS-HQ-CORE#</span> show access-lists FINANCE-IN
+Extended IP access list FINANCE-IN
+    10 permit udp any any eq bootps
+    20 permit udp 10.20.20.0 0.0.0.127 host 10.20.30.12 eq domain
+    30 permit tcp 10.20.20.0 0.0.0.127 10.20.30.0 0.0.0.31 eq www
+    40 permit tcp 10.20.20.0 0.0.0.127 10.20.30.0 0.0.0.31 eq 443
+    50 permit tcp 10.20.20.0 0.0.0.127 10.20.30.0 0.0.0.31 eq 1433
+    60 permit icmp 10.20.20.0 0.0.0.127 10.20.30.0 0.0.0.31 echo (4 match(es))
+    70 permit udp 10.20.20.0 0.0.0.127 10.20.30.0 0.0.0.31 range 33434 33534
+    80 deny ip 10.20.20.0 0.0.0.127 10.20.30.0 0.0.0.31
+    90 permit ip any any</pre>
+          <p><b>Pass criteria:</b> 0% loss; HTTP page loads; FINANCE-IN echo/www permits increment while the <code>deny ip</code> ACE stays flat.</p>
+          <div class="tactions">
+            <a class="btn" href="lab.html?dev=MLS-HQ-CORE&amp;cmd=show%20access-lists">replay on MLS</a>
+            <a class="btn btn-ghost" href="05-verification-evidence/verification_report.md" target="_blank" rel="noopener">runbook .md</a>
+          </div>
         </div>
-        <p><strong>Pass criteria:</strong> 0% loss; HTTP page loads; FINANCE-IN echo/www permits increment while the deny ACE stays flat. Simulation mode shows one L3 hop (TTL 128→127) — the collapsed core does the routing.</p>
       </article>
 
-      <article class="card" id="t-02" style="margin-bottom:1.2rem">
-        <span class="card-chip">T-02 · Zero-trust isolation</span>
-        <h3>Guest → Internal VLANs</h3>
-        <p><strong>Objective:</strong> prove the guest VLAN cannot reach ANY internal destination. <strong>Path (attack):</strong> <span class="mono">PC-GUEST01 → MLS SVI40 ingress → DROPPED by GUEST-IN</span></p>
-        <div class="terminal">
-          <div class="terminal-bar"><i></i><i></i><i></i><span>PC-GUEST01 + MLS-HQ-CORE</span></div>
-          <pre>C:\&gt; ping 10.20.20.5
-Request timed out. (x4)
-Packets: Sent = 4, Received = 0, Lost = 4 (100% loss)
+      <article class="tcard" id="t-02">
+        <div class="tcard-head"><h3>T-02 — Zero-trust isolation: Guest → internal VLANs</h3><span class="chip drop">blocked by design</span></div>
+        <div class="tcard-body">
+          <p><b>Objective:</b> prove the guest VLAN cannot reach ANY internal destination — the core business requirement.</p>
+          <p class="td-mono">PC-GUEST01 (10.20.40.100) → MLS SVI40 ingress → DROPPED by GUEST-IN line 30</p>
+          <ol class="steps-mini">
+            <li>Ping internal targets from the guest — 100% loss. Try the browser against <code>http://10.20.30.20</code> — denied too (internal HTTP is not permitted).</li>
+            <li>Confirm the isolation counter and the syslog record.</li>
+            <li>Control case: guest DNS still works (permitted before the isolation deny) — the ACL is surgical, not blunt.</li>
+          </ol>
+          <span class="cli-label">recorded · PC-GUEST01</span>
+          <pre class="cli">C:\&gt; ping 10.20.20.5
 
-C:\&gt; ping 10.20.30.20       -> 100% loss
-Browser: http://10.20.30.20 -> page does not load
+Pinging 10.20.20.5 with 32 bytes of data:
+Request timed out.
+Request timed out.
+Request timed out.
+Request timed out.
 
-MLS-HQ-CORE# show access-lists GUEST-IN
- 30 deny ip any 10.20.0.0 0.0.255.255 (8 match(es))</pre>
+Ping statistics for 10.20.20.5:
+    Packets: Sent = 4, Received = 0, Lost = 4 (100% loss)</pre>
+          <span class="cli-label">recorded · MLS-HQ-CORE# show access-lists GUEST-IN</span>
+          <pre class="cli"><span class="p">MLS-HQ-CORE#</span> show access-lists GUEST-IN
+Extended IP access list GUEST-IN
+    10 permit udp any any eq bootps (9 match(es))
+    20 permit udp any any eq domain (31 match(es))
+    30 deny ip any 10.20.0.0 0.0.255.255 log (8 match(es))
+    40 permit tcp any any eq www (18 match(es))
+    50 permit tcp any any eq 443 (9 match(es))
+    60 deny ip any any log (4 match(es))</pre>
+          <span class="cli-label">recorded · SVL-NTPLOG01 → Syslog (NTP-aligned)</span>
+          <pre class="cli">%SEC-6-IPACCESSLOGDP: list GUEST-IN denied icmp 10.20.40.100 (Vlan40) -&gt; 10.20.20.5, 1 packet</pre>
+          <p><b>Pass criteria:</b> 100% loss to every internal target; deny counter increments per attempt; matching records arrive on the central Syslog. Guest DNS keeps working by design.</p>
+          <div class="tactions">
+            <a class="btn" href="lab.html?dev=MLS-HQ-CORE&amp;cmd=show%20access-lists">replay on MLS</a>
+            <a class="btn btn-ghost" href="05-verification-evidence/verification_report.md" target="_blank" rel="noopener">runbook .md</a>
+          </div>
         </div>
-        <p><strong>Pass criteria:</strong> 100% loss to every internal target; deny counter increments per attempt; deny records arrive on the central Syslog server. Guest DNS still works (permitted before the isolation deny) — by design, and proof the ACL is surgical, not blunt.</p>
       </article>
 
-      <article class="card" id="t-03" style="margin-bottom:1.2rem">
-        <span class="card-chip">T-03 · Edge NAT/PAT</span>
-        <h3>Guest → External Internet web server</h3>
-        <p><strong>Objective:</strong> prove guests get exactly the Internet access the policy allows (DNS + HTTP/HTTPS) through R1's NAT/PAT overload — and nothing more. <strong>Path:</strong> <span class="mono">PC-GUEST01 → MLS SVI40 → R1 Gi0/1 → NAT/PAT (203.0.113.2) → ISP → 198.51.100.10</span></p>
-        <div class="terminal">
-          <div class="terminal-bar"><i></i><i></i><i></i><span>PC-GUEST01 + R1-HQ-EDGE</span></div>
-          <pre>C:\&gt; nslookup internet.test
-Non-authoritative answer:
-Name:    internet.test
-Address: 198.51.100.10
-
-Browser: http://internet.test -> external web page loads
-C:\&gt; ping 198.51.100.10      -> 100% loss (ICMP NOT in the guest allowlist)
-
-R1-HQ-EDGE# show ip nat translations
+      <article class="tcard" id="t-03">
+        <div class="tcard-head"><h3>T-03 — Edge NAT/PAT: Guest → Internet web</h3><span class="chip pass">documented</span></div>
+        <div class="tcard-body">
+          <p><b>Objective:</b> prove guests get exactly the Internet access the policy allows (DNS + HTTP/HTTPS) through R1's NAT/PAT overload — and nothing more.</p>
+          <p class="td-mono">PC-GUEST01 → MLS SVI40 → R1 Gi0/1 → NAT/PAT (203.0.113.2) → ISP → 198.51.100.10</p>
+          <ol class="steps-mini">
+            <li><code>nslookup internet.test</code> → 198.51.100.10 (via internal SVL-DNS01, permitted before the isolation deny). Browse <code>http://internet.test</code> → external page loads.</li>
+            <li><b>Negative control:</b> <code>ping 198.51.100.10</code> from the guest → 100% loss. ICMP to the Internet is not in the guest allowlist — intentional default-deny.</li>
+            <li>Inspect the live translation table on R1 — only non-enterprise outside entries, and no internal→internal NAT entries.</li>
+          </ol>
+          <span class="cli-label">recorded · R1-HQ-EDGE# show ip nat translations</span>
+          <pre class="cli"><span class="p">R1-HQ-EDGE#</span> show ip nat translations
 Pro  Inside global      Inside local       Outside local      Outside global
-tcp 203.0.113.2:1025   10.20.40.100:1025  198.51.100.10:80   198.51.100.10:80</pre>
+tcp 203.0.113.2:1025   10.20.40.100:1025  198.51.100.10:80   198.51.100.10:80
+tcp 203.0.113.2:1026   10.20.40.100:1026  198.51.100.10:80   198.51.100.10:80
+tcp 203.0.113.2:1027   10.20.50.50:1027   198.51.100.10:80   198.51.100.10:80</pre>
+          <p><b>Control case:</b> DNS to 10.20.30.12 and any internal-to-internal session never appear in this table — <code>NAT-PERMITTED</code> line 10 denies translating enterprise→enterprise, so the VTY/MGMT ACLs always see true source addresses.</p>
+          <p><b>Pass criteria:</b> external page loads from the guest; PAT entry shows the public inside-global address; zero internal→internal NAT entries; ICMP from the guest stays denied.</p>
+          <div class="tactions">
+            <a class="btn" href="lab.html?dev=R1-HQ-EDGE&amp;cmd=show%20ip%20nat%20translations">replay on R1</a>
+            <a class="btn btn-ghost" href="05-verification-evidence/verification_report.md" target="_blank" rel="noopener">runbook .md</a>
+          </div>
         </div>
-        <p><strong>Pass criteria:</strong> external page loads from the guest; the NAT table shows the PAT entry with the public inside-global address; no internal→internal NAT entries (NAT-PERMITTED excludes them); ICMP from the guest stays denied.</p>
       </article>
 
-      <article class="card" id="t-04" style="margin-bottom:1.2rem">
-        <span class="card-chip">T-04 · WAN dynamic routing</span>
-        <h3>Branch → HQ App Server over OSPF</h3>
-        <p><strong>Objective:</strong> prove the Mombasa branch reaches HQ services purely via dynamically learned OSPF routes — no static routes on the branch — while BRANCH-IN enforces the branch policy.</p>
-        <div class="terminal">
-          <div class="terminal-bar"><i></i><i></i><i></i><span>R1-HQ-EDGE + PC-BR01</span></div>
-          <pre>R1-HQ-EDGE# show ip ospf neighbor
-Neighbor ID     Pri   State           Dead Time   Address         Interface
-2.2.2.2           0   FULL/  -        00:00:37    10.20.254.2     GigabitEthernet0/2
-3.3.3.3           0   FULL/  -        00:00:34    10.20.254.6     GigabitEthernet0/1
+      <article class="tcard" id="t-04">
+        <div class="tcard-head"><h3>T-04 — WAN dynamic routing: Branch → HQ app server over OSPF</h3><span class="chip pass">documented</span></div>
+        <div class="tcard-body">
+          <p><b>Objective:</b> prove the Mombasa branch reaches HQ services purely via dynamically learned OSPF routes — no static routes on the branch — while <code>BRANCH-IN</code> enforces the branch policy.</p>
+          <p class="td-mono">PC-BR01 (10.20.50.x) → R2 Gi0/1.50 → WAN Link A → R1 → Link B → MLS SVI30 → SVL-APP01</p>
+          <ol class="steps-mini">
+            <li>Confirm both R1 adjacencies FULL, and that R2 holds only dynamic routes.</li>
+            <li>Traceroute from PC-BR01 — exactly three routed hops.</li>
+            <li>Policy control: ping Finance from the branch → 100% loss, BRANCH-IN deny counter + syslog record.</li>
+          </ol>
+          <span class="cli-label">recorded · R1-HQ-EDGE# show ip ospf neighbor</span>
+          <pre class="cli"><span class="p">R1-HQ-EDGE#</span> show ip ospf neighbor
 
-R2-MOMBASA-EDGE# show ip route | include 10.20.30.0|0.0.0.0/0
-O       10.20.30.0/27 [110/2] via 10.20.254.1, 00:14:02, GigabitEthernet0/0
+Neighbor ID     Pri   State           Dead Time   Address         Interface
+2.2.2.2          0   FULL/  -        00:00:37    10.20.254.2     GigabitEthernet0/2
+3.3.3.3          0   FULL/  -        00:00:34    10.20.254.6     GigabitEthernet0/1</pre>
+          <span class="cli-label">recorded · R2-MOMBASA-EDGE# show ip route</span>
+          <pre class="cli"><span class="p">R2-MOMBASA-EDGE#</span> show ip route
+Gateway of last resort is 10.20.254.1 to network 0.0.0.0
+
+     10.0.0.0/8 is variably subnetted, 13 subnets, 7 masks
+O       10.20.10.0/26 [110/3] via 10.20.254.1, 00:14:02, GigabitEthernet0/0
+O       10.20.20.0/25 [110/3] via 10.20.254.1, 00:14:02, GigabitEthernet0/0
+O       10.20.30.0/27 [110/3] via 10.20.254.1, 00:14:02, GigabitEthernet0/0
+O       10.20.40.0/24 [110/3] via 10.20.254.1, 00:14:02, GigabitEthernet0/0
+C       10.20.50.0/25 is directly connected, GigabitEthernet0/1.50
+L       10.20.50.1/32 is directly connected, GigabitEthernet0/1.50
+O       10.20.99.0/28 [110/3] via 10.20.254.1, 00:14:02, GigabitEthernet0/0
+C       10.20.99.16/28 is directly connected, GigabitEthernet0/1.99
+L       10.20.99.17/32 is directly connected, GigabitEthernet0/1.99
+C       10.20.254.0/30 is directly connected, GigabitEthernet0/0
+L       10.20.254.2/32 is directly connected, GigabitEthernet0/0
+O       10.20.254.4/30 [110/2] via 10.20.254.1, 00:14:02, GigabitEthernet0/0
+O       10.20.255.1/32 [110/2] via 10.20.254.1, 00:14:02, GigabitEthernet0/0
 O*E2 0.0.0.0/0 [110/1] via 10.20.254.1, 00:14:02, GigabitEthernet0/0
 
-C:\&gt; tracert 10.20.30.20
-  1   10.20.50.1      R2 Gi0/1.50 (branch gateway)
-  2   10.20.254.1     R1 Gi0/2 (WAN edge)
-  3   10.20.254.6     MLS-HQ-CORE
-  4   10.20.30.20     SVL-APP01 reply
+[no static routes on the branch: every HQ subnet is OSPF-learned (O),
+ the default is originated by R1 via default-information originate (O*E2)]</pre>
+          <span class="cli-label">recorded · PC-BR01</span>
+          <pre class="cli">C:\&gt; tracert 10.20.30.20
 
-C:\&gt; ping 10.20.20.5        -> 100% loss (Branch -> Finance HARD DENY, logged)</pre>
+Tracing route to 10.20.30.20 over a maximum of 30 hops:
+
+  1   1 ms    1 ms    1 ms     10.20.50.1        &lt;- R2 Gi0/1.50 (branch gateway)
+  2   2 ms    1 ms    1 ms     10.20.254.1       &lt;- R1 Gi0/2 (WAN edge)
+  3   2 ms    2 ms    2 ms     10.20.254.6       &lt;- MLS-HQ-CORE
+  4   2 ms    1 ms    1 ms     10.20.30.20       &lt;- SVL-APP01
+
+Trace complete.</pre>
+          <p><b>Pass criteria:</b> both R1 adjacencies FULL; branch holds only dynamic OSPF + default routes; traceroute shows exactly the three routed hops; branch→HQ-server succeeds while branch→Finance stays denied and logged.</p>
+          <div class="tactions">
+            <a class="btn" href="lab.html?dev=R2-MOMBASA-EDGE&amp;cmd=show%20ip%20route">replay on R2</a>
+            <a class="btn btn-ghost" href="05-verification-evidence/verification_report.md" target="_blank" rel="noopener">runbook .md</a>
+          </div>
         </div>
-        <p><strong>Pass criteria:</strong> both R1 adjacencies FULL; the branch holds only dynamic OSPF + default routes; traceroute shows exactly the three routed hops; branch→HQ-server succeeds while branch→Finance stays denied and logged.</p>
       </article>
 
-      <article class="card" id="t-05" style="margin-bottom:1.2rem">
-        <span class="card-chip">T-05 · L2 attack response</span>
-        <h3>Port Security &amp; BPDU Guard</h3>
-        <p><strong>Objective:</strong> prove rogue devices are stopped at the wall jack. <strong>Procedure A:</strong> connect a rogue hub with two extra MACs to SW1 Fa0/3 (Finance, max 2). <strong>Procedure B:</strong> connect a rogue switch to SW1 Fa0/5.</p>
-        <div class="terminal">
-          <div class="terminal-bar"><i></i><i></i><i></i><span>SW1-HQ-ACCESS-1</span></div>
-          <pre>%PORT_SECURITY-2-PSECURE_VIOLATION: Security violation occurred, caused by
-  MAC address 00D0.9711.2201, on port FastEthernet0/3.
-
-SW1-HQ-ACCESS-1# show port-security interface FastEthernet0/3
+      <article class="tcard" id="t-05">
+        <div class="tcard-head"><h3>T-05 — Layer-2 attack response: Port Security &amp; BPDU Guard</h3><span class="chip drop">err-disable on first signature</span></div>
+        <div class="tcard-body">
+          <p><b>Objective:</b> prove rogue devices are stopped at the wall jack, exactly as the security policy promises.</p>
+          <p class="td-mono">Attack A: rogue hub + 2 MACs on SW1 Fa0/3 (sticky, max 2) · Attack B: rogue switch on SW1 Fa0/5 (PortFast + BPDU Guard)</p>
+          <ol class="steps-mini">
+            <li>Connect the rogue hub to Fa0/3 — the port sees 3 MACs against <code>maximum 2</code> and err-disables on the first violation.</li>
+            <li>Connect a rogue switch to Fa0/5 — BPDU Guard disables the port before it can influence STP.</li>
+            <li>Recover: <code>shutdown</code> / <code>no shutdown</code> after removing the rogue device (documented procedure).</li>
+          </ol>
+          <span class="cli-label">recorded · SW1 console during attack A</span>
+          <pre class="cli">%PORT_SECURITY-2-PSECURE_VIOLATION: Security violation occurred, caused by MAC address 00D0.9711.2201, on port FastEthernet0/3.</pre>
+          <span class="cli-label">recorded · SW1-HQ-ACCESS-1# (after attack A)</span>
+          <pre class="cli"><span class="p">SW1-HQ-ACCESS-1#</span> show port-security interface FastEthernet0/3
+Port Security              : Enabled
 Port Status                : Secure-shutdown
 Violation Mode             : Shutdown
+Aging Time                 : 0 mins
+Aging Type                 : Absolute
+SecureStatic Address Aging : Enabled
+Maximum MAC Addresses      : 2
+Total MAC Addresses        : 2
+Configured MAC Addresses   : 0
 Sticky MAC Addresses       : 1
 Last Source Address:Vlan   : 00D0.9711.2201:20
 Security Violation Count   : 1
 
-SW1-HQ-ACCESS-1# show interfaces status | include Fa0/
-Fa0/3   FIN/HR ACCESS   err-disabled  20    auto   auto  10/100BaseTX
-Fa0/5   FIN/HR ACCESS   err-disabled  20    auto   auto  10/100BaseTX
-
-%SPANTREE-2-BLOCK_BPDUGUARD: Received BPDU on port FastEthernet0/5 with
-  BPDU Guard enabled. Disabling port.</pre>
+<span class="p">SW1-HQ-ACCESS-1#</span> show interfaces status
+Port      Name               Status       Vlan       Duplex  Speed Type
+Fa0/3     FIN/HR ACCESS      err-disabled 20         auto    auto  10/100BaseTX
+[excerpt - all other ports normal]</pre>
+          <span class="cli-label">recorded · SW1 console during attack B</span>
+          <pre class="cli">%SPANTREE-2-BLOCK_BPDUGUARD: Received BPDU on port FastEthernet0/5 with BPDU Guard enabled. Disabling port.</pre>
+          <p><b>Pass criteria:</b> both ports err-disable automatically on the first attack signature; counters and logs captured; recovery demonstrated.</p>
+          <div class="tactions">
+            <a class="btn" href="lab.html?dev=SW1-HQ-ACCESS-1&amp;cmd=show%20port-security">replay on SW1</a>
+            <a class="btn btn-ghost" href="05-verification-evidence/verification_report.md" target="_blank" rel="noopener">runbook .md</a>
+          </div>
         </div>
-        <p><strong>Pass criteria:</strong> both ports go err-disabled automatically on the first attack signature; logs and counters captured; recovery (<span class="mono">shutdown</span> / <span class="mono">no shutdown</span> after removing the rogue) demonstrated.</p>
       </article>
 
-      <article class="card" id="t-06" style="margin-bottom:1.2rem">
-        <span class="card-chip">T-06 · Management plane</span>
-        <h3>SSH/Telnet access control — double enforcement</h3>
-        <p><strong>Objective:</strong> prove only the IT Admin VLAN can manage devices, enforced at TWO independent layers (gateway ACLs + VTY access-class).</p>
-        <div class="terminal">
-          <div class="terminal-bar"><i></i><i></i><i></i><span>Three source VLANs, one target</span></div>
-          <pre>C:\&gt; ssh -l netadmin 10.20.99.2    ! from Guest VLAN 40  -> no response (GUEST-IN)
-C:\&gt; ssh -l netadmin 10.20.99.2    ! from Finance VLAN 20 -> no response (MGMT-PLANE)
-C:\&gt; ssh -l netadmin 10.20.99.2    ! from IT VLAN 10      -> password prompt, session opens
+      <article class="tcard" id="t-06">
+        <div class="tcard-head"><h3>T-06 — Management-plane protection: SSH access control</h3><span class="chip pass">documented</span></div>
+        <div class="tcard-body">
+          <p><b>Objective:</b> prove only the IT Admin VLAN can manage devices, enforced at two independent layers (gateway ACLs + VTY access-class).</p>
+          <p class="td-mono">Targets: any device mgmt address (example: SW1 SVI99 = 10.20.99.2, SSHv2 only)</p>
+          <ol class="steps-mini">
+            <li>Guest attempt — dies at MLS SVI40 (GUEST-IN isolation deny); never routes.</li>
+            <li>Finance attempt — FINANCE-IN permits transit, but MGMT-PLANE on MLS Vlan99 (out) drops it: only 10.20.10.0/26 may open SSH into the management VLAN.</li>
+            <li>IT attempt — both locks open; session lands on the device. Telnet is refused everywhere (<code>transport input ssh</code>).</li>
+          </ol>
+          <span class="cli-label">recorded · three attempts from different PCs</span>
+          <pre class="cli">C:\&gt; ssh -l netadmin 10.20.99.2
+[guest PC - no response: GUEST-IN drops the packet at MLS SVI40, it never routes]
 
-C:\&gt; telnet 10.20.99.2             ! connection refused (Telnet dead everywhere)
+C:\&gt; ssh -l netadmin 10.20.99.2
+[finance PC - no response: MGMT-PLANE on MLS Vlan99 (out) drops it,
+ only 10.20.10.0/26 may open SSH into the management VLAN - logged]
 
-SW1-HQ-ACCESS-1# show ip ssh
-SSH version 2 enabled
+C:\&gt; ssh -l netadmin 10.20.99.2
+Password: ************
 
-MLS-HQ-CORE# show access-lists GUEST-IN | include (8 match
-MLS-HQ-CORE# show access-lists MGMT-PLANE          <- deny counter increments</pre>
+SW1-HQ-ACCESS-1&gt;
+[IT admin PC - both locks open]</pre>
+          <span class="cli-label">recorded · MLS-HQ-CORE# show access-lists MGMT-PLANE</span>
+          <pre class="cli"><span class="p">MLS-HQ-CORE#</span> show access-lists MGMT-PLANE
+Extended IP access list MGMT-PLANE
+    10 permit tcp 10.20.10.0 0.0.0.63 10.20.99.0 0.0.0.15 eq 22 (5 match(es))
+    20 permit icmp 10.20.10.0 0.0.0.63 10.20.99.0 0.0.0.15 (11 match(es))
+    30 permit udp host 10.20.30.11 10.20.99.0 0.0.0.15 eq ntp (217 match(es))
+    40 deny ip any 10.20.99.0 0.0.0.15 log (6 match(es))</pre>
+          <span class="cli-label">recorded · every device (example SW1)</span>
+          <pre class="cli"><span class="p">SW1-HQ-ACCESS-1#</span> show ip ssh
+SSH Version: 2.0
+SSH protocol version 1: disabled 2: enabled</pre>
+          <p><b>Pass criteria:</b> guest and finance attempts fail with matching ACL deny counters + syslog records; IT SSH succeeds; Telnet refused; SSHv2 confirmed.</p>
+          <div class="tactions">
+            <a class="btn" href="lab.html?dev=MLS-HQ-CORE&amp;cmd=show%20access-lists">replay on MLS</a>
+            <a class="btn btn-ghost" href="05-verification-evidence/verification_report.md" target="_blank" rel="noopener">runbook .md</a>
+          </div>
         </div>
-        <p><strong>Pass criteria:</strong> guest and finance attempts fail with matching ACL deny counters + Syslog records; IT admin SSH succeeds; Telnet refused; SSHv2 confirmed.</p>
       </article>
 
-      <article class="card" id="t-07">
-        <span class="card-chip">T-07 · Central DHCP</span>
-        <h3>DHCP with relay agents</h3>
-        <p><strong>Objective:</strong> prove one central DHCP server (VLAN 30) serves all user VLANs through the relay agents, handing out exactly the planned scopes — with no rogue DHCP possible.</p>
-        <div class="terminal">
-          <div class="terminal-bar"><i></i><i></i><i></i><span>PC-FIN02 + SW1-HQ-ACCESS-1</span></div>
-          <pre>C:\&gt; ipconfig
+      <article class="tcard" id="t-07">
+        <div class="tcard-head"><h3>T-07 — Central DHCP with relay agents</h3><span class="chip pass">documented</span></div>
+        <div class="tcard-body">
+          <p><b>Objective:</b> prove one central DHCP server (VLAN 30) serves all user VLANs through the relay agents, handing out exactly the planned scopes — with no rogue DHCP possible.</p>
+          <p class="td-mono">Relays: MLS SVI10 / SVI20 / SVI40 and R2 Gi0/1.50 → SVL-DC01 (10.20.30.10)</p>
+          <ol class="steps-mini">
+            <li>Set PC-FIN02 (VLAN 20) to DHCP — lease must match the planned scope (10.20.20.0/25, gw .1, DNS 10.20.30.12).</li>
+            <li>Repeat for branch (VLAN 50 via R2 relay) and guest (VLAN 40 via MLS relay).</li>
+            <li>Rogue DHCP control: a DHCP server on a guest access port gets its offers dropped by DHCP Snooping (untrusted port).</li>
+          </ol>
+          <span class="cli-label">recorded · PC-FIN02</span>
+          <pre class="cli">C:\&gt; ipconfig
+
 IP Address......................: 10.20.20.6
 Subnet Mask.....................: 255.255.255.128
 Default Gateway.................: 10.20.20.1
-DNS Server......................: 10.20.30.12
-
-SW1-HQ-ACCESS-1# show ip dhcp snooping binding
+DNS Server......................: 10.20.30.12</pre>
+          <span class="cli-label">recorded · SW1-HQ-ACCESS-1# show ip dhcp snooping binding</span>
+          <pre class="cli"><span class="p">SW1-HQ-ACCESS-1#</span> show ip dhcp snooping binding
 MacAddress          IpAddress        Lease(sec)  Type           VLAN  Interface
+------------------  ---------------  ----------  -------------  ----  -------------------
 0050.56BE.1102      10.20.20.6       86395       dhcp-snooping   20   FastEthernet0/3
-Total number of bindings: 1
-
-SVL-DC01 -> Services -> DHCP: pool VLAN20-FIN, allocated count >= 1
-Branch PC-BR02: leases 10.20.50.x via the R2 Gi0/1.50 relay
-Rogue DHCP offers on an access port: silently dropped (snooping, untrusted)</pre>
+Total number of bindings: 1</pre>
+          <p><b>Pass criteria:</b> all three user scopes hand out planned addresses/gateways/DNS via the relays; snooping bindings populate on the access switches; rogue offers are dropped.</p>
+          <div class="tactions">
+            <a class="btn" href="lab.html?dev=SW1-HQ-ACCESS-1&amp;cmd=show%20ip%20dhcp%20snooping%20binding">replay on SW1</a>
+            <a class="btn btn-ghost" href="05-verification-evidence/verification_report.md" target="_blank" rel="noopener">runbook .md</a>
+          </div>
         </div>
-        <p><strong>Pass criteria:</strong> all three user scopes hand out planned addresses/gateways/DNS via the relays; snooping bindings populate on the access switches; rogue offers are dropped.</p>
       </article>
-    </div>
-  </section>
 
-  <section class="section">
-    <div class="container">
-      <div class="section-head">
-        <p class="eyebrow">Evidence</p>
-        <h2>Result summary</h2>
-        <p>Fill after the lab run — capture naming and the evidence index are defined in the checklist document.</p>
-      </div>
+      <h2>Evidence capture</h2>
+      <p>Captures are filed under <code>captures/</code> using the naming convention defined in the <a href="05-verification-evidence/screenshot-checklist.md" target="_blank" rel="noopener">screenshot checklist</a> (one file per test step, taken while the state is live).</p>
+
+      <h2>Result summary</h2>
       <div class="table-wrap">
         <table>
-          <thead>
-            <tr><th>Test</th><th>Scenario</th><th>Result</th><th>Evidence</th></tr>
-          </thead>
+          <thead><tr><th>Test</th><th>Scenario</th><th>Status</th><th>Evidence</th></tr></thead>
           <tbody>
-            <tr><td class="mono"><strong>T-01</strong></td><td>Finance → Server routed + ACL policy</td><td><span class="pill pill-amber">Pending</span></td><td class="mono">captures/T-01-*.png</td></tr>
-            <tr><td class="mono"><strong>T-02</strong></td><td>Guest isolation enforced + logged</td><td><span class="pill pill-amber">Pending</span></td><td class="mono">captures/T-02-*.png</td></tr>
-            <tr><td class="mono"><strong>T-03</strong></td><td>Guest Internet via NAT/PAT, ICMP denied</td><td><span class="pill pill-amber">Pending</span></td><td class="mono">captures/T-03-*.png</td></tr>
-            <tr><td class="mono"><strong>T-04</strong></td><td>Branch → HQ over OSPF + branch policy</td><td><span class="pill pill-amber">Pending</span></td><td class="mono">captures/T-04-*.png</td></tr>
-            <tr><td class="mono"><strong>T-05</strong></td><td>Port Security + BPDU Guard err-disable</td><td><span class="pill pill-amber">Pending</span></td><td class="mono">captures/T-05-*.png</td></tr>
-            <tr><td class="mono"><strong>T-06</strong></td><td>Management plane double-enforced</td><td><span class="pill pill-amber">Pending</span></td><td class="mono">captures/T-06-*.png</td></tr>
-            <tr><td class="mono"><strong>T-07</strong></td><td>Central DHCP + relays + snooping bindings</td><td><span class="pill pill-amber">Pending</span></td><td class="mono">captures/T-07-*.png</td></tr>
+            <tr><td class="td-mono">T-01</td><td>Finance → Server routed + ACL policy</td><td><span class="chip info">documented — reproduce in PT</span></td><td class="td-mono">captures/T-01-*.png</td></tr>
+            <tr><td class="td-mono">T-02</td><td>Guest isolation enforced + logged</td><td><span class="chip info">documented — reproduce in PT</span></td><td class="td-mono">captures/T-02-*.png</td></tr>
+            <tr><td class="td-mono">T-03</td><td>Guest Internet via NAT/PAT, ICMP denied</td><td><span class="chip info">documented — reproduce in PT</span></td><td class="td-mono">captures/T-03-*.png</td></tr>
+            <tr><td class="td-mono">T-04</td><td>Branch → HQ over OSPF + branch policy</td><td><span class="chip info">documented — reproduce in PT</span></td><td class="td-mono">captures/T-04-*.png</td></tr>
+            <tr><td class="td-mono">T-05</td><td>Port Security + BPDU Guard err-disable</td><td><span class="chip info">documented — reproduce in PT</span></td><td class="td-mono">captures/T-05-*.png</td></tr>
+            <tr><td class="td-mono">T-06</td><td>Management plane double-enforced</td><td><span class="chip info">documented — reproduce in PT</span></td><td class="td-mono">captures/T-06-*.png</td></tr>
+            <tr><td class="td-mono">T-07</td><td>Central DHCP + relays + snooping bindings</td><td><span class="chip info">documented — reproduce in PT</span></td><td class="td-mono">captures/T-07-*.png</td></tr>
           </tbody>
         </table>
       </div>
-      <div class="callout">
-        <strong>Full runbook:</strong> the complete version with full expected outputs and the capture discipline is in <a href="05-verification-evidence/verification_report.md" target="_blank" rel="noopener">05-verification-evidence/verification_report.md</a> and <a href="05-verification-evidence/screenshot-checklist.md" target="_blank" rel="noopener">screenshot-checklist.md</a>.
+      <p><a href="lab.html">Open the lab console to replay the recorded sessions →</a></p>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p class="f-title">Savannah Logistics Ltd. — multi-branch enterprise campus network</p>
+        <nav aria-label="Footer navigation">
+          <a href="index.html">Overview</a>
+          <a href="lab.html">Lab console</a>
+          <a href="verification.html">Verification</a>
+          <a href="https://github.com/peterken-365/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture" target="_blank" rel="noopener">Repository</a>
+        </nav>
       </div>
-    </div>
-  </section>
-</main>
-<footer class="site-footer">
-  <div class="container footer-inner">
-    <div class="footer-brand">
-      <p class="f-title">Savannah Logistics Ltd. — Multi-Branch Enterprise Campus Network</p>
-      <p class="f-sub">Zero-Trust Segmentation &amp; WAN Architecture · CCNA 200-301 aligned · Nairobi HQ + Mombasa Branch · Designed and documented by peterken-365</p>
-    </div>
-    <nav class="footer-nav" aria-label="Footer navigation">
-      <a href="index.html">Overview</a>
-      <a href="topology.html">Topology</a>
-      <a href="ip-plan.html">IP Plan</a>
-      <a href="switching-routing.html">Design</a>
-      <a href="security.html">Security</a>
-      <a href="automation.html">Automation</a>
-      <a href="verification.html">Verification</a>
-      <a href="https://github.com/peterken-365/Multi-Branch-Enterprise-Campus-Network-Design-Zero-Trust-Segmentation-WAN-Architecture" target="_blank" rel="noopener">Repository</a>
-    </nav>
+      <div class="footer-base">
+        <p>© <span data-year>2026</span> peterken-365 · Junior Network &amp; Security Architect portfolio · CCNA 200-301.</p>
+        <p>Configs are lab/design values — rotate credentials before production deployment.</p>
+      </div>
+    </footer>
   </div>
-  <div class="container footer-base">
-    <p>© <span id="year">2026</span> peterken-365 — Junior Network &amp; Security Architect portfolio project.</p>
-    <p>Configs are lab/design values — rotate credentials before production deployment.</p>
-  </div>
-</footer>
+</div>
 <script src="script.js"></script>
 </body>
 </html>
