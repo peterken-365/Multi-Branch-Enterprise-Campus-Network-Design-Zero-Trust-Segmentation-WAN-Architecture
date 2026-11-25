@@ -123,7 +123,7 @@ interface range FastEthernet0/12 - 18
  spanning-tree bpduguard enable
 !
 ! --- Unused ports: quarantine + shutdown --------------------------------------------
-interface range FastEthernet0/19 - 24
+interface range FastEthernet0/19 - 24, GigabitEthernet0/2
  description QUARANTINE - UNUSED PORTS (VLAN 999, SHUTDOWN)
  switchport mode access
  switchport access vlan 999

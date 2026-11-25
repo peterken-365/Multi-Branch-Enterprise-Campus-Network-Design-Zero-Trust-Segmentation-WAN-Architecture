@@ -109,7 +109,7 @@ interface FastEthernet0/4
  switchport port-security violation shutdown
 !
 ! --- Unused ports: quarantine + shutdown ----------------------------------------------
-interface range FastEthernet0/5 - 24
+interface range FastEthernet0/5 - 24, GigabitEthernet0/2
  description QUARANTINE - UNUSED PORTS (VLAN 999, SHUTDOWN)
  switchport mode access
  switchport access vlan 999
