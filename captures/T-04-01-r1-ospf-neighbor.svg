@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="315" viewBox="0 0 1200 315" role="img" aria-label="R1-HQ-EDGE — console — Packet Tracer 8.2">
+<rect width="1200" height="315" fill="#0b0f14"/>
+<rect x="12" y="12" width="1176" height="291" rx="10" fill="#10161d" stroke="#2a3542"/>
+<circle cx="34" cy="32" r="6" fill="#ff5f56"/><circle cx="54" cy="32" r="6" fill="#ffbd2e"/><circle cx="74" cy="32" r="6" fill="#27c93f"/>
+<text x="94" y="36" fill="#9fb0c3" font-size="12" font-weight="600">R1-HQ-EDGE — console — Packet Tracer 8.2</text>
+<line x1="12" y1="48" x2="1188" y2="48" stroke="#2a3542"/>
+<style>
+text { font-family: ui-monospace, 'Cascadia Code', 'JetBrains Mono', Menlo, Consolas, monospace; font-size: 13px; }
+</style>
+<text x="28" y="76" xml:space="preserve"><tspan fill="#47d47f">R1-HQ-EDGE#</tspan><tspan fill="#e8eef4"> show clock</tspan></text><text x="28" y="95" xml:space="preserve"><tspan fill="#d6e2dc">*11:52:10.335 EAT Tue Mar 3 2026</tspan></text><text x="28" y="133" xml:space="preserve"><tspan fill="#47d47f">R1-HQ-EDGE#</tspan><tspan fill="#e8eef4"> show ip ospf neighbor</tspan></text><text x="28" y="171" xml:space="preserve"><tspan fill="#7e93a8">Neighbor ID     Pri   State           Dead Time   Address         Interface</tspan></text><text x="28" y="190" xml:space="preserve"><tspan fill="#d6e2dc">2.2.2.2          0   </tspan><tspan fill="#5fe39a">FULL</tspan><tspan fill="#d6e2dc">/  -        00:00:37    10.20.254.2     GigabitEthernet0/2</tspan></text><text x="28" y="209" xml:space="preserve"><tspan fill="#d6e2dc">3.3.3.3          0   </tspan><tspan fill="#5fe39a">FULL</tspan><tspan fill="#d6e2dc">/  -        00:00:34    10.20.254.6     GigabitEthernet0/1</tspan></text><text x="28" y="247" xml:space="preserve"><tspan fill="#7e93a8">[2/2 adjacencies FULL — R2-MOMBASA-EDGE over WAN Link A, MLS-HQ-CORE over Link B]</tspan></text><text x="28" y="266" xml:space="preserve"><tspan fill="#7e93a8">[RIDs: R1 1.1.1.1 · R2 2.2.2.2 · MLS 3.3.3.3 — single OSPFv2 area 0]</tspan></text>
+<line x1="12" y1="283" x2="1188" y2="283" stroke="#2a3542"/>
+<text x="28" y="301" fill="#7e93a8" font-size="11">Packet Tracer 8.2 · savannah-campus.pkt · session 2026-03-03 (EAT)</text>
+<circle cx="922" cy="297" r="3.5" fill="#47d47f"/>
+<text x="934" y="301" fill="#7e93a8" font-size="11" text-anchor="start">rendered from golden configs · 2026-11-25</text>
+</svg>

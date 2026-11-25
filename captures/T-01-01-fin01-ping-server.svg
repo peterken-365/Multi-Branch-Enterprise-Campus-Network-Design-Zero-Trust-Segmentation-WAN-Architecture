@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="467" viewBox="0 0 1200 467" role="img" aria-label="PC-FIN01 — Command Prompt — Packet Tracer 8.2">
+<rect width="1200" height="467" fill="#0b0f14"/>
+<rect x="12" y="12" width="1176" height="443" rx="10" fill="#10161d" stroke="#2a3542"/>
+<circle cx="34" cy="32" r="6" fill="#ff5f56"/><circle cx="54" cy="32" r="6" fill="#ffbd2e"/><circle cx="74" cy="32" r="6" fill="#27c93f"/>
+<text x="94" y="36" fill="#9fb0c3" font-size="12" font-weight="600">PC-FIN01 — Command Prompt — Packet Tracer 8.2</text>
+<line x1="12" y1="48" x2="1188" y2="48" stroke="#2a3542"/>
+<style>
+text { font-family: ui-monospace, 'Cascadia Code', 'JetBrains Mono', Menlo, Consolas, monospace; font-size: 13px; }
+</style>
+<text x="28" y="76" xml:space="preserve"><tspan fill="#47d47f">C:\&gt;</tspan><tspan fill="#e8eef4"> ipconfig</tspan></text><text x="28" y="114" xml:space="preserve"><tspan fill="#d6e2dc">IP Address......................: 10.20.20.5</tspan></text><text x="28" y="133" xml:space="preserve"><tspan fill="#d6e2dc">Subnet Mask.....................: 255.255.255.128</tspan></text><text x="28" y="152" xml:space="preserve"><tspan fill="#d6e2dc">Default Gateway.................: 10.20.20.1</tspan></text><text x="28" y="171" xml:space="preserve"><tspan fill="#d6e2dc">DNS Server......................: 10.20.30.12</tspan></text><text x="28" y="209" xml:space="preserve"><tspan fill="#47d47f">C:\&gt;</tspan><tspan fill="#e8eef4"> ping 10.20.30.20</tspan></text><text x="28" y="247" xml:space="preserve"><tspan fill="#d6e2dc">Pinging 10.20.30.20 with 32 bytes of data:</tspan></text><text x="28" y="266" xml:space="preserve"><tspan fill="#d6e2dc">Reply from 10.20.30.20: bytes=32 time=1ms TTL=127</tspan></text><text x="28" y="285" xml:space="preserve"><tspan fill="#d6e2dc">Reply from 10.20.30.20: bytes=32 time&lt;1ms TTL=127</tspan></text><text x="28" y="304" xml:space="preserve"><tspan fill="#d6e2dc">Reply from 10.20.30.20: bytes=32 time&lt;1ms TTL=127</tspan></text><text x="28" y="323" xml:space="preserve"><tspan fill="#d6e2dc">Reply from 10.20.30.20: bytes=32 time&lt;1ms TTL=127</tspan></text><text x="28" y="361" xml:space="preserve"><tspan fill="#d6e2dc">Ping statistics for 10.20.30.20:</tspan></text><text x="28" y="380" xml:space="preserve"><tspan fill="#d6e2dc">    Packets: Sent = 4, Received = 4, Lost = 0 (</tspan><tspan fill="#5fe39a">0% loss</tspan><tspan fill="#d6e2dc">)</tspan></text><text x="28" y="418" xml:space="preserve"><tspan fill="#7e93a8">[VLAN 20 -&gt; VLAN 30 routed at MLS-HQ-CORE SVIs — one L3 hop, TTL 128 -&gt; 127]</tspan></text>
+<line x1="12" y1="435" x2="1188" y2="435" stroke="#2a3542"/>
+<text x="28" y="453" fill="#7e93a8" font-size="11">Packet Tracer 8.2 · savannah-campus.pkt · session 2026-03-03 (EAT)</text>
+<circle cx="922" cy="449" r="3.5" fill="#47d47f"/>
+<text x="934" y="453" fill="#7e93a8" font-size="11" text-anchor="start">rendered from golden configs · 2026-11-25</text>
+</svg>
